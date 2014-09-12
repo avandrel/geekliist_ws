@@ -14,3 +14,5 @@ gem 'bootstrap-sass'
 gem 'simple_form'
 
 gem 'actionview'
+
+gem 'newrelic_rpm'
