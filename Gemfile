@@ -2,6 +2,15 @@ source 'http://rubygems.org'
 
 gem 'rack'
 gem 'grape'
-gem 'thin'
+gem 'sinatra'
+gem 'sinatra-static-assets'
+gem 'emk-sinatra-url-for'
+
 gem 'nokogiri'
 gem 'mongo'
+
+gem 'haml'
+gem 'bootstrap-sass'
+gem 'simple_form'
+
+gem 'actionview'

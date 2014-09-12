@@ -1,6 +1,18 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    actionpack (4.1.6)
+      actionview (= 4.1.6)
+      activesupport (= 4.1.6)
+      rack (~> 1.5.2)
+      rack-test (~> 0.6.2)
+    actionview (4.1.6)
+      activesupport (= 4.1.6)
+      builder (~> 3.1)
+      erubis (~> 2.7.0)
+    activemodel (4.1.6)
+      activesupport (= 4.1.6)
+      builder (~> 3.1)
     activesupport (4.1.6)
       i18n (~> 0.6, >= 0.6.9)
       json (~> 1.7, >= 1.7.7)
@@ -11,15 +23,18 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    bootstrap-sass (3.2.0.2)
+      sass (~> 3.2)
     bson (1.10.2)
     builder (3.2.2)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
-    daemons (1.1.9)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    emk-sinatra-url-for (0.2.1)
+      sinatra (>= 0.9.1.1)
     equalizer (0.0.9)
-    eventmachine (1.0.3)
+    erubis (2.7.0)
     grape (0.9.0)
       activesupport
       builder
@@ -30,6 +45,8 @@ GEM
       rack-accept
       rack-mount
       virtus (>= 1.0.0)
+    haml (4.0.5)
+      tilt
     hashie (3.3.1)
     i18n (0.6.11)
     ice_nine (0.11.0)
@@ -47,11 +64,22 @@ GEM
       rack (>= 0.4)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
-    thin (1.6.2)
-      daemons (>= 1.0.9)
-      eventmachine (>= 1.0.0)
-      rack (>= 1.0.0)
+    rack-protection (1.5.3)
+      rack
+    rack-test (0.6.2)
+      rack (>= 1.0)
+    sass (3.4.3)
+    simple_form (3.0.2)
+      actionpack (~> 4.0)
+      activemodel (~> 4.0)
+    sinatra (1.4.5)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    sinatra-static-assets (1.0.4)
+      sinatra (>= 1.1.0)
     thread_safe (0.3.4)
+    tilt (1.4.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     virtus (1.0.3)
@@ -64,8 +92,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  actionview
+  bootstrap-sass
+  emk-sinatra-url-for
   grape
+  haml
   mongo
   nokogiri
   rack
-  thin
+  simple_form
+  sinatra
+  sinatra-static-assets
