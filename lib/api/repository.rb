@@ -6,13 +6,13 @@ module GeeklistWS
     		@games_collection = connector.games_collection
     	end
 
-    	def game_in_repo?(id, list_id)
-    		@games_collection.find_one({:id => "#{id}", :list_id => "#{list_id}"}) != nil
+    	def game_in_repo?(id)
+    		@games_collection.find_one({:id => "#{id}"}) != nil
     	end
 
-    	def add_game(game,id)  		
+    	def add_game(game)  		
     		game.delete(:poster) unless game[:poster] == nil
-            game[:list_id] = id
+            game.delete(:number) unless game[:number] == nil
     		@games_collection.insert(game)
             symbolize_keys(game)
             game

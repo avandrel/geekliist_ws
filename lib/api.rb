@@ -21,7 +21,7 @@ module GeeklistWS
         puts "Geeklist loaded"
         games_finder = GeeklistWS::API::GamesFinder.new geeklist
         response = games_finder.find_games
-        puts "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s, Count: #{response.length}"
+        puts "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s"
         response
       end
     end
@@ -30,6 +30,7 @@ module GeeklistWS
     	def connect
 #    		Mongo::Connection.new("ds063779.mongolab.com", "63779").db("heroku_app29514506")
             Mongo::Connection.from_uri("mongodb://geeklist_client:geeklist@ds063779.mongolab.com:63779/heroku_app29514506").db('heroku_app29514506')
+ #           Mongo::Connection.from_uri("mongodb://localhost").db('geeklistws')
     	end
     	
     	def games_collection
