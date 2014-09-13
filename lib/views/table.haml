@@ -14,8 +14,24 @@
         %tbody
           - @converter.games.each do |game|
             %tr
-            - game.values.each do |value|
-              %td{:class => "vert-align"}= value
+              %td{:style => "vertical-align: middle"}
+                %big
+                  %strong= game[:number]
+              %td{:style => "vertical-align: middle"}
+                %img{:src => game[:desc][:image], :style => "float:left;width:100px; height:100px;margin:0px 10px 0px 0px", :class => "img-thumbnail"}
+                %p
+                  %h4
+                    %a{:href => game[:desc][:url]}= game[:desc][:title]
+                  - game[:desc][:ranks].each do |r_key, r_value|
+                    = "#{r_key}: #{r_value}"
+                    %br
+              %td{:style => "vertical-align: middle"}
+                %big= game[:poster]
+              %td{:style => "vertical-align: middle"}
+                %big= game[:average]
+              %td{:style => "vertical-align: middle"}
+                %big= game[:boardgame]                            
+
   /
   %script{:src => "/js/jquery.js"}
   %script{:src => "/js/bootstrap.js"}

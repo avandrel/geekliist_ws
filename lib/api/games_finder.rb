@@ -16,8 +16,10 @@ module GeeklistWS
     			if @repository.game_in_repo?(game[:id])
     				#puts "Reading from repo #{game[:id]}"
                     database_count = database_count + 1
-                    readed_game = @repository.get_game(game)
+                    readed_game = @repository.get_game(game[:id])
                     readed_game[:number] = game[:number]
+                    readed_game[:poster] = game[:poster]
+                    readed_game[:imageid] = game[:imageid]
     				response[:games] << readed_game
     			else
     				#puts "Reading from BGG #{game[:id]}"
