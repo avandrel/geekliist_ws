@@ -16,7 +16,6 @@ module GeeklistWS
 
     	def games
     		prapared_games = []
-            puts @games
     		@games.each do |game|
     			prapared_games << {
     				:number => game[:number],
