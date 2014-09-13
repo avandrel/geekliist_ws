@@ -1,3 +1,5 @@
+# encoding UTF-8
+
 require 'nokogiri'
 
 module GeeklistWS
@@ -7,6 +9,8 @@ module GeeklistWS
     		game = {}
     		game[:id] = item.attribute('objectid').value
     		game[:title] = item.attribute('objectname').value
+            puts item.inspect
+            puts game[:title]
     		game[:poster] = item.attribute('username').value
             game[:imageid] = item.attribute('imageid').value
     		game[:number] = number

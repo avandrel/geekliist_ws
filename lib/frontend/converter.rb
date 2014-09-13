@@ -1,30 +1,36 @@
 module GeeklistWS
   module Frontend
     class Converter
-    	def initialize(games)
-    		@games = games
+    	def initialize(response)
+    		@games = response[:games]
+            @title = response[:title]
     	end
+
+        def title
+            @title
+        end
 
     	def headers
     		["Id","Title", "Poster", "Average Rating", "Overall Rank"]
     	end
 
     	def games
-    		games = []
+    		prapared_games = []
+            puts @games
     		@games.each do |game|
-    			games << {
-    				:number => game["number"],
-    				:title => create_title(game["id"], game["title"], game["imageid"]),
-    				:poster => create_poster(game["poster"]),
-    				:average => create_number(game["average"]),
-    				:boardgame => create_number(game["boardgame"])
+    			prapared_games << {
+    				:number => game[:number],
+    				:title => create_title(game[:id], game[:title], game[:imageid]),
+    				:poster => create_poster(game[:poster]),
+    				:average => create_number(game[:average]),
+    				:boardgame => create_number(game[:boardgame])
     			}
     		end
-    		games
+    		prapared_games
     	end
 
     	def create_title(id, title, imageid)
-    		"<a href=\"http://www.boardgamegeek.com/boardgame/#{id}\">#{create_image(imageid)}#{title}</a>"
+    		"<a href=\"http://www.boardgamegeek.com/boardgame/#{id}\">#{create_image(imageid)} #{title}</a>"
     	end
 
     	def create_image(id)
