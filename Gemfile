@@ -15,4 +15,6 @@ gem 'simple_form'
 
 gem 'actionview'
 
-gem 'newrelic_rpm'
+gem "newrelic-grape"
+gem "newrelic_moped"
+gem "newrelic_rpm"
