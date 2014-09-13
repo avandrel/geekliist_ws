@@ -22,6 +22,11 @@ module GeeklistWS
 	  		ratings = doc.xpath("//boardgames/boardgame/statistics/ratings")
 	  		game.merge(Parsers.parse_rating(ratings))
 	  	end
+
+	  	def self.read_poster(name)
+	  		doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}")))
+	  		doc.at_xpath("//avatarlink").attribute('value').value
+	  	end
 	end
   end
 end

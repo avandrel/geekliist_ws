@@ -11,6 +11,7 @@ module GeeklistWS
     		game[:title] = item.attribute('objectname').value
     		game[:poster] = item.attribute('username').value
             game[:imageid] = item.attribute('imageid').value
+            game[:itemid] = item.attribute('id').value
     		game[:number] = number
   		game
     	end

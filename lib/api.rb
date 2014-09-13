@@ -21,6 +21,7 @@ module GeeklistWS
         puts "Geeklist loaded"
         games_finder = GeeklistWS::API::GamesFinder.new geeklist
         response = games_finder.find_games
+        response[:id] = id
         puts "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s"
         response
       end
@@ -37,6 +38,10 @@ module GeeklistWS
     		#connect.authenticate("geeklist_client", "geeklist")
             connect["games"]
     	end
+
+        def posters_collection
+            connect["posters"]
+        end
     end
   end
 end

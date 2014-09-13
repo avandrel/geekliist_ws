@@ -14,9 +14,10 @@
         %tbody
           - @converter.games.each do |game|
             %tr
-              %td{:style => "vertical-align: middle"}
-                %big
-                  %strong= game[:number]
+              %td{:style => "vertical-align: middle", :class => "text-center"}
+                %h5
+                  %a{:href => "http://www.boardgamegeek.com/geeklist/#{@converter.id}/item/#{game[:number][:itemid]}#item#{game[:number][:itemid]}"}= game[:number][:number]
+                   
               %td{:style => "vertical-align: middle"}
                 %img{:src => game[:desc][:image], :style => "float:left;width:100px; height:100px;margin:0px 10px 0px 0px", :class => "img-thumbnail"}
                 %p
@@ -25,11 +26,16 @@
                   - game[:desc][:ranks].each do |r_key, r_value|
                     = "#{r_key}: #{r_value}"
                     %br
-              %td{:style => "vertical-align: middle"}
-                %big= game[:poster]
-              %td{:style => "vertical-align: middle"}
+              %td{:style => "vertical-align: middle", :class => "text-center"}
+                %big
+                  %a{:href => "http://www.boardgamegeek.com/user/#{game[:poster]}"}
+                    = game[:poster][:name]
+                    - if game[:poster][:avatar] != nil
+                      %br
+                      %img{:src => game[:poster][:avatar]}
+              %td{:style => "vertical-align: middle", :class => "text-center"}
                 %big= game[:average]
-              %td{:style => "vertical-align: middle"}
+              %td{:style => "vertical-align: middle", :class => "text-center"}
                 %big= game[:boardgame]                            
 
   /

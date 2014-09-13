@@ -1,6 +1,6 @@
 module GeeklistWS
   module API
-    class Repository
+    class GamesRepository
     	def initialize
     		connector = MongoConnector.new 
     		@games_collection = connector.games_collection
@@ -23,7 +23,7 @@ module GeeklistWS
             game.delete(:number) unless game[:number] == nil
     		@games_collection.insert(game)
             symbolize_keys(game)
-            game
+            game.clone
     	end
 
     	def get_game(id)
