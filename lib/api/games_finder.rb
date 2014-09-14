@@ -31,7 +31,7 @@ module GeeklistWS
                 posters << game[:poster] unless posters.include?(game[:poster])
                 readed_game[:imageid] = game[:imageid]
                 readed_game[:itemid] = game[:itemid]
-                response[:games] << readed_game
+                response[:games] << readed_game unless readed_game[:title] == "Unidentified Game"
     		end
             
             puts "\nFinished. Cached: #{database_count}, Online: #{bgg_count}"
