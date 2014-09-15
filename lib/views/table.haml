@@ -13,7 +13,7 @@
             %th{:class => "header"}= header
         %tbody
           - @converter.games.each do |game|
-            %tr
+            %tr{:class => (game[:actual] ? nil : "danger")}
               %td{:style => "vertical-align: middle", :class => "text-center"}
                 %h5
                   %a{:href => "http://www.boardgamegeek.com/geeklist/#{@converter.id}/item/#{game[:number][:itemid]}#item#{game[:number][:itemid]}"}= game[:number][:number]
@@ -23,9 +23,13 @@
                 %p
                   %h4
                     %a{:href => game[:desc][:url]}= game[:desc][:title]
-                  - game[:desc][:ranks].each do |r_key, r_value|
-                    = "#{r_key}: #{r_value}"
-                    %br
+                  - if game[:actual]
+                    - game[:desc][:ranks].each do |r_key, r_value|
+                      = "#{r_key}: #{r_value}"
+                      %br
+                  - else
+                    %h5
+                      %strong NIEAKTUALNE?
               %td{:style => "vertical-align: middle", :class => "text-center"}
                 %big
                   %a{:href => "http://www.boardgamegeek.com/user/#{game[:poster]}"}

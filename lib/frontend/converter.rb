@@ -32,11 +32,16 @@ module GeeklistWS
     				:poster => { :name => game[:poster], :avatar => @posters[game[:poster]] },
     				:average => create_number(game[:average]),
     				:boardgame => create_number(game[:boardgame]),
-                    :desc => create_desc(game)
+                    :desc => create_desc(game),
+                    :actual => check_actual(game[:body])
     			}
     		end
     		prapared_games
     	end
+
+        def check_actual(body)
+            !body.downcase.include?("nieaktualne")
+        end
 
         def create_desc(game)
             description = { :ranks => {}}

@@ -31,6 +31,7 @@ module GeeklistWS
                 posters << game[:poster] unless posters.include?(game[:poster])
                 readed_game[:imageid] = game[:imageid]
                 readed_game[:itemid] = game[:itemid]
+                readed_game[:body] = game[:body]
                 response[:games] << readed_game unless readed_game[:title] == "Unidentified Game"
     		end
             
