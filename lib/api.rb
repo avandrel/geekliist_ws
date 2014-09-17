@@ -16,7 +16,7 @@ module GeeklistWS
     class Internal
       def self.get(id)
         start_time = Time.now
-        puts "Start reading from BGG"
+        puts "Start reading geeklist"
         geeklist = GeeklistWS::API::Readers.read_geeklist(id)
         puts "Geeklist loaded"
         games_finder = GeeklistWS::API::GamesFinder.new geeklist
@@ -41,6 +41,10 @@ module GeeklistWS
 
         def posters_collection
             connect["posters"]
+        end
+
+        def list_collection
+            connect["list_cache"]
         end
     end
   end

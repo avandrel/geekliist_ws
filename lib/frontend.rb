@@ -5,14 +5,14 @@ module GeeklistWS
   module Frontend	
 	class Web < Sinatra::Base
 
-  		get "/" do 
-  			data = GeeklistWS::API::Internal.get("178608")
+      get "/*" do
+        data = GeeklistWS::API::Internal.get("178608")
         #data = GeeklistWS::API::Internal.get("178867")
 
-  			@converter = GeeklistWS::Frontend::Converter.new data
+        @converter = GeeklistWS::Frontend::Converter.new data, params[:splat][0]
 
-    		haml :table
-  		end
+        haml :table
+      end
 	end
   end
 end

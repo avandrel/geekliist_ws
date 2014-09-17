@@ -26,6 +26,8 @@ GEM
     bootstrap-sass (3.2.0.2)
       sass (~> 3.2)
     bson (1.10.2)
+    bson_ext (1.10.2)
+      bson (~> 1.10.2)
     builder (3.2.2)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -102,6 +104,7 @@ PLATFORMS
 DEPENDENCIES
   actionview
   bootstrap-sass
+  bson_ext
   emk-sinatra-url-for
   grape
   haml

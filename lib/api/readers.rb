@@ -7,7 +7,16 @@ module GeeklistWS
   module API
 	class Readers
 	  	def self.read_geeklist(id)
-	  		doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/geeklist/#{id}"), nil, "UTF-8")
+	  		@list_repository = ListRepository.new
+	  		if @list_repository.list_in_repo?(id)
+	  			puts "List from cache"
+	  			list = @list_repository.get_list(id)
+	  		else
+	  			puts "List from BGG"
+	  			list = open("http://www.boardgamegeek.com/xmlapi/geeklist/#{id}").read
+	  			@list_repository.add_list(id, list)
+	  		end
+	  		doc = Nokogiri::HTML(list, nil, "UTF-8")
 	  		geeklist = {:games => []}
 	  		geeklist[:title] = doc.at_xpath("//title").content
 	  		geeklist[:id] = doc.at_xpath("//geeklist").attribute('id').value

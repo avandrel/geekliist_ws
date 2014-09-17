@@ -1,11 +1,13 @@
 module GeeklistWS
   module Frontend
     class Converter
-    	def initialize(response)
+    	def initialize(response, category)
     		@games = response[:games]
             @title = response[:title]
             @posters = response[:posters]
             @id = response[:id]
+            @category = category
+            @subdomains = GeeklistWS::Frontend::Subdomains.create_subdomains
     	end
 
         def id
@@ -23,7 +25,7 @@ module GeeklistWS
     	def games
     		prapared_games = []
     		@games.each do |game|
-    			prapared_games << {
+                prepared_game = {
     				:number => { :number => game[:number], :itemid => game[:itemid] },
     				#:title => create_title(game[:id], game[:title], game[:imageid]),
                     #:title => game[:title],
@@ -35,6 +37,7 @@ module GeeklistWS
                     :desc => create_desc(game),
                     :actual => check_actual(game[:body])
     			}
+                prapared_games << prepared_game if check_category(prepared_game[:desc])
     		end
     		prapared_games
     	end
@@ -43,32 +46,39 @@ module GeeklistWS
             !body.downcase.include?("nieaktualne")
         end
 
+        def check_category(description)
+            case @category
+                when "abstracts"
+                    description[:ranks].has_key?("Abstract Game Rank")
+                when "childrensgames"
+                    description[:ranks].has_key?("Children's Game Rank")
+                when "cgs"
+                    description[:ranks].has_key?("Customizable Rank")
+                when "familygames"
+                    description[:ranks].has_key?("Family Game Rank")
+                when "partygames"
+                    description[:ranks].has_key?("Party Game Rank")
+                when "strategygames"
+                    description[:ranks].has_key?("Strategy Game Rank")
+                when "thematic"
+                    description[:ranks].has_key?("Thematic Game Rank")
+                when "wargames"
+                    description[:ranks].has_key?("War Game Rank")
+                else
+                    true
+            end
+        end
+
         def create_desc(game)
             description = { :ranks => {}}
-
             description[:url] = "http://www.boardgamegeek.com/boardgame/#{game[:id]}"
             description[:image] = "http://cf.geekdo-images.com/images/pic#{game[:imageid]}_t.jpg"
             description[:title] = game[:title]
 
             game.each do |key,value|
-                    case key
-                    when :abstracts
-                        description[:ranks]["Abstract Game Rank"] = value unless value == 0
-                    when :childrensgames
-                        description[:ranks]["Children's Game Rank"] = value unless value == 0
-                    when :cgs
-                        description[:ranks]["Customizable Rank"] = value unless value == 0
-                    when :familygames
-                        description[:ranks]["Family Game Rank"] = value unless value == 0
-                    when :partygames
-                        description[:ranks]["Party Game Rank"] = value unless value == 0
-                    when :strategygames
-                        description[:ranks]["Strategy Game Rank"] = value unless value == 0
-                    when :thematic
-                        description[:ranks]["Thematic Game Rank"] = value unless value == 0
-                    when :wargames
-                        description[:ranks]["War Game Rank"] = value unless value == 0
-                    end
+                if @subdomains.has_key?(key)
+                    description[:ranks][@subdomains[key]] = value unless value == 0
+                end
             end
             description
         end

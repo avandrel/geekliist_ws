@@ -5,6 +5,7 @@ gem 'grape'
 gem 'sinatra'
 gem 'sinatra-static-assets'
 gem 'emk-sinatra-url-for'
+gem 'bson_ext'
 
 gem 'nokogiri'
 gem 'mongo'
