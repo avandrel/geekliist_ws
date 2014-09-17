@@ -11,7 +11,7 @@ module GeeklistWS
 
         @converter = GeeklistWS::Frontend::Converter.new data, params[:splat][0]
 
-        haml :table
+        haml :view
       end
 	end
   end

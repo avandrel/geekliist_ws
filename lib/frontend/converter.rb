@@ -17,6 +17,14 @@ module GeeklistWS
         def title
             @title
         end
+        
+        def category
+            @category
+        end
+
+        def subdomains
+            @subdomains
+        end
 
     	def headers
     		["Id","Title", "Poster", "Average Rating", "Overall Rank"]
@@ -77,7 +85,7 @@ module GeeklistWS
 
             game.each do |key,value|
                 if @subdomains.has_key?(key)
-                    description[:ranks][@subdomains[key]] = value unless value == 0
+                    description[:ranks][@subdomains[key][:rank_name]] = value unless value == 0
                 end
             end
             description

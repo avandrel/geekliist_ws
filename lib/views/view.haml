@@ -1,0 +1,17 @@
+!!! 
+%html   
+  %head     
+    %title= @converter.title
+    %link{:href => "/css/bootstrap.css", :rel => "stylesheet"}/
+    %link{:href => "/css/style.css", :rel => "stylesheet"}/    
+  %body
+    = haml :_buttons
+    = haml :_table
+    = haml :_buttons                     
+
+  /
+  %script{:src => "/js/jquery.js"}
+  %script{:src => "/js/bootstrap.js"}
+  %script{:src => "/js/jquery.tablesorter.js"}
+
+  %script $(document).ready(function(){$(function(){$("#mytable").tablesorter();});});
