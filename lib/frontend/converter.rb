@@ -15,9 +15,10 @@ module GeeklistWS
         end
         
         def title
+            return "#{@subdomains[@category.to_sym][:sub_name]} :: #{@title}" unless @category.empty?
             @title
         end
-        
+
         def category
             @category
         end
