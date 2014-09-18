@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'haml'
 
 # This is a rack app.
 module GeeklistWS
