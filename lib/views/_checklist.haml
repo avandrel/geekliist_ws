@@ -1,0 +1,20 @@
+%div{:style => "margin-left:auto;margin-right:auto;width: 960px"} 
+  %table{:id => "mytable", :class => "table"}
+    %thead
+      %tr
+        %th{:class => "header"} Zamień
+        %th{:class => "header"} Na
+    %tbody
+      - @converter.exchanges.each do |exchange|
+        - puts exchange.inspect
+        %tr
+          %td{:style => "vertical-align: middle", :class => "text-center", :rowspan => "#{exchange[:priorities].count}"} 
+            %a{:href => "http://www.boardgamegeek.com/geeklist/#{@converter.id}/item/#{exchange[:from][:itemid]}#item#{exchange[:from][:itemid]}"}= exchange[:from][:title]
+          %td{:style => "vertical-align: middle", :class => "text-center"}
+            - exchange[:priorities][0].each do |game|
+              %span= game[:title]
+        - exchange[:priorities][1..exchange[:priorities].count].each do |ex|
+          %tr
+            %td{:style => "vertical-align: middle", :class => "text-center"}
+              - ex.each do |game|
+                %span= game[:title]

@@ -8,13 +8,13 @@ module GeeklistWS
         format :json
 
         get "/:id", requirements: { id: /[0-9]*/ } do
-        	GeeklistWS::API::Internal.get(params[:id])
+        	GeeklistWS::API::Internal.get_geeklist(params[:id])
         end
       end
     end  
 
     class Internal
-      def self.get(id)
+      def self.get_geeklist(id)
         start_time = Time.now
         puts "Start reading geeklist"
         geeklist = GeeklistWS::API::Readers.read_geeklist(id)
@@ -22,6 +22,17 @@ module GeeklistWS
         games_finder = GeeklistWS::API::GamesFinder.new geeklist
         response = games_finder.find_games
         response[:id] = id
+        puts "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s"
+        response
+      end
+
+      def self.get_checklist(list, id)
+        start_time = Time.now
+        puts "Api - id: #{id}"
+        geeklist = get_geeklist(id)
+        puts "Geeklist loaded"
+        list_checker = GeeklistWS::API::ListChecker.new list.split(/\r\n/), geeklist
+        response = list_checker.check
         puts "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s"
         response
       end

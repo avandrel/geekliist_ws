@@ -3,17 +3,38 @@ require 'sinatra/base'
 # This is a rack app.
 module GeeklistWS
   module Frontend	
-	class Web < Sinatra::Base
-
-      get "/*" do
-        data = GeeklistWS::API::Internal.get("178608")
-        #data = GeeklistWS::API::Internal.get("178867")
-
-        @converter = GeeklistWS::Frontend::Converter.new data, params[:splat][0]
-
-        haml :view
+	  class Web < Sinatra::Base
+      configure do
+        set :id, '178608'
       end
-	end
+
+      get "/" do 
+        redirect '/list'
+      end
+
+      get "/list*" do
+        puts "Get"
+        data = GeeklistWS::API::Internal.get_geeklist(settings.id)
+        #data = GeeklistWS::API::Internal.get_geeklist("178867")
+        @converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
+
+        haml :listview
+      end
+
+      get "/checklist" do
+        @post = false
+        haml :checklistview
+      end
+
+      post "/checklist" do
+          puts "checklist"
+          @post = true
+          data = GeeklistWS::API::Internal.get_checklist(params["list"], settings.id)
+          #puts data.inspect
+          @converter = GeeklistWS::Frontend::CheckListConverter.new data
+          haml :checklistview
+      end
+	  end
   end
 end
 

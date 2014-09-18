@@ -1,6 +1,6 @@
 module GeeklistWS
   module Frontend
-    class Converter
+    class ListConverter
     	def initialize(response, category)
     		@games = response[:games]
             @title = response[:title]
@@ -15,7 +15,7 @@ module GeeklistWS
         end
         
         def title
-            return "#{@subdomains[@category.to_sym][:sub_name]} :: #{@title}" unless @category.empty?
+            return "#{@subdomains[@category.to_sym][:sub_name]} :: #{@title}" unless @category.nil? || @category.empty?
             @title
         end
 

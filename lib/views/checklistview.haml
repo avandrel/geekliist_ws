@@ -1,0 +1,15 @@
+!!! 
+%html   
+  %head     
+    %title CheckList
+    %link{:href => "/css/bootstrap.css", :rel => "stylesheet"}/
+    %link{:href => "/css/style.css", :rel => "stylesheet"}/    
+  %body
+    - if @post
+      = haml :_checklist
+    - else
+      = haml :_form              
+
+  /
+  %script{:src => "/js/jquery.js"}
+  %script{:src => "/js/bootstrap.js"}
