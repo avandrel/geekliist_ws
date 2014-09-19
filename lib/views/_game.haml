@@ -5,3 +5,5 @@
       %img{:src => game_desc[:image], :style => "vertical-align:middle; width:75px; height:75px; margin:0 auto", :class => "thumbnail"}
     %div{:class => "row"}
       = "#{game_desc[:title]} (#{game_desc[:number]})"
+  - game[:aliases].each do |a|
+    = "#{a}"

@@ -5,6 +5,7 @@ module GeeklistWS
             @subdomains = GeeklistWS::Frontend::Subdomains.create_subdomains
             @id = response[:id]
             @exchanges = sort_games(response[:exchanges])
+            create_exchanges
     	end
 
         def id
@@ -16,7 +17,7 @@ module GeeklistWS
         end
 
         def exchanges
-            @exchanges
+            @flatten_exchanges
         end
 
     	def headers
@@ -24,12 +25,22 @@ module GeeklistWS
     	end
 
         def sort_games(exchanges)
-            exchanges.each do |exchange|
-                exchange[:priorities].each do |prio|
+            exchanges[0].each do |exchange|
+                exchange[:to].each do |prio|
                     prio.sort_by! { |hsh| hsh[:title] }
                 end
             end
             exchanges
+        end
+
+        def create_exchanges
+            @flatten_exchanges = []
+            @exchanges[0].each do |exchange|
+                flat_ex = { :poster => exchange[:poster] }
+                flat_ex[:from] = exchange[:from]
+                flat_ex[:to] = exchange[:to]
+                @flatten_exchanges << flat_ex
+            end
         end
 
     	def games(priorities)
@@ -62,7 +73,8 @@ module GeeklistWS
             description[:image] = "http://cf.geekdo-images.com/images/pic#{game[:imageid]}_t.jpg"
             description[:title] = game[:title]
             description[:number] = game[:number]
-            
+            description[:aliases] = game[:aliases]
+
             game.each do |key,value|
                 if @subdomains.has_key?(key)
                     description[:ranks][@subdomains[key][:rank_name]] = value unless value == 0

@@ -19,3 +19,4 @@ gem 'actionview'
 gem "newrelic-grape"
 gem "newrelic_moped"
 gem "newrelic_rpm"
+gem 'rspec'

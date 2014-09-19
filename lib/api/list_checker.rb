@@ -8,28 +8,83 @@ module GeeklistWS
 
 		def check
 			response = { :exchanges => [] }
+			exchanges = []
+			aliases = []
 			@list.each do |element|
-				array_element = element.scan(/[(](.*)[)] ([0-9]*) : (.*)/)
-				array_prio = array_element[0][2].include?(";") ? array_element[0][2].split(';').map! {|x| x.split(" ")} : [array_element[0][2].split(" ")]
-				hash_element = { :poster => array_element[0][0], :priorities => {}}
-				response[:exchanges] << fill_games(hash_element, array_prio, array_element[0][1])
+				element_array = element.scan(/[(](.*)[)] (.*) : (.*)/)
+				unless element_array.empty? 
+					exchange_hash = { :poster => element_array[0][0], :from => element_array[0][1], :to => element_array[0][2]} 
+					exchanges << exchange_hash
+				end
+
+				alias_array = element.scan(/^(%.*) : (.*)/)
+				unless alias_array.empty?
+					alias_hash = {:id => alias_array[0][0], :elements => alias_array[0][1]} 
+					aliases << alias_hash
+				end
 			end
+			@alias_collection = prepare_aliases(aliases)
+			@exchange_collection = prepare_exchanges(exchanges)
+			response[:exchanges] << fill_games()
 			response[:id] = @geeklist[:id]
 			response
 		end		
 
-		def fill_games(hash_element, array_prio, id)
-			array_prio.map! { |priority| priority.map! { |game_id| 
-				get_by_id(game_id)
-				}}
-			hash_element[:from] = get_by_id(id)
-			hash_element[:priorities] = array_prio
-			hash_element
+		def prepare_exchanges(exchanges)
+			exchange_collection = []
+			while exchanges.count > 0
+				exchanges.delete_if { |exchange|
+					exchange_collection << {:poster => exchange[:poster], :from => prepare(exchange[:from]), :to => prepare(exchange[:to])} if (!exchange[:from].include?("%") && !exchange[:to].include?("%"))
+				}
+				exchanges.select { |ex| ex[:from].include?("%") }.each do |ex|
+					ex[:from].scan(/(%[0-9a-zA-Z_]*)/).each do |a|
+						ex[:from][a[0]] = @alias_collection[a[0]]
+					end
+				end
+				exchanges.select { |ex| ex[:to].include?("%") }.each do |ex|
+					ex[:to].scan(/(%[0-9a-zA-Z_]*)/).each do |a|
+						ex[:to][a[0]] = @alias_collection[a[0]]
+					end
+				end
+			end
+			exchange_collection
+		end
+
+		def prepare(to)
+			to.include?(";") ? to.split(';').map! {|x| x.split(" ")} : [to.split(" ")]
+		end
+
+		def prepare_aliases(aliases)
+			alias_collection = {}
+			while aliases.count > 0
+				aliases.delete_if {|a| alias_collection[a[:id]] = a[:elements] if !a[:elements].include?("%")}
+				alias_collection.each do |key, value|
+					aliases.select { |al| al[:elements].include?(key) }.each do |selected|
+						selected[:elements][key] = value
+					end
+				end
+			end
+			alias_collection
+		end
+
+		def fill_games()
+			@exchange_collection.each do |exchange|
+				exchange[:to].map! { |to| to.map! { |game_id| get_by_id(game_id) } }
+				exchange[:from].map! { |from| from.map! { |game_id| get_by_id(game_id) } }
+			end	
 		end
 
 		def get_by_id(game_id)
 			id = @geeklist[:games].find_index { |item| item[:number] == game_id.to_i }
-			@geeklist[:games][id]
+			game = @geeklist[:games][id]
+			aliases = []
+			@alias_collection.each do |key, value|
+				if value.split(" ").include?(game_id)
+					aliases << key
+				end
+			end
+			game[:aliases] = aliases
+			game
 		end
 
 		def find_id(game_id)

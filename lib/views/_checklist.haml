@@ -6,19 +6,23 @@
         %th{:class => "header"} Na
     %tbody
       - @converter.exchanges.each do |exchange|
-        - #puts exchange.inspect
         %tr
-          %td{:class => "text-center", :rowspan => "#{exchange[:priorities].count}"}
+          %td{:class => "text-center", :rowspan => "#{exchange[:to].count}"}
             %div{:class => "float", :style => "position: relative"}
-              %a{:href => "http://www.boardgamegeek.com/geeklist/#{@converter.id}/item/#{exchange[:from][:itemid]}#item#{exchange[:from][:itemid]}"}
-                %img{:src => "http://cf.geekdo-images.com/images/pic#{exchange[:from][:imageid]}_t.jpg", :style => "vertical-align:middle; width:75px; height:75px; margin:0 auto", :class => "thumbnail"}
-                = exchange[:from][:title]
+              - exchange[:from][0].each_slice(2) do |slice|
+                %div{:class => "row"}
+                  - slice.each do |ex|
+                    %a{:href => "http://www.boardgamegeek.com/geeklist/#{@converter.id}/item/#{ex[:itemid]}#item#{ex[:itemid]}"}
+                      %img{:src => "http://cf.geekdo-images.com/images/pic#{ex[:imageid]}_t.jpg", :style => "vertical-align:middle; width:60px; height:60px; margin:0 auto", :class => "thumbnail"}
+                      = ex[:title]
+                    - ex[:aliases].each do |a|
+                      = "<br>#{a}"
           %td{:style => "vertical-align: middle", :class => "text-center"}
-            - exchange[:priorities][0].each_slice(6) do |slice|
+            - exchange[:to][0].each_slice(6) do |slice|
               %div{:class => "row"}
                 - slice.each do |game|
                   = haml :_game, :locals => { :game => game }
-        - exchange[:priorities][1..exchange[:priorities].count].each do |ex|
+        - exchange[:to][1..exchange[:to].count].each do |ex|
           %tr
             %td{:style => "vertical-align: middle", :class => "text-center"}
               - ex.each_slice(6) do |slice|
