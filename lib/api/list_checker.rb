@@ -11,13 +11,13 @@ module GeeklistWS
 			exchanges = []
 			aliases = []
 			@list.each do |element|
-				element_array = element.scan(/[(](.*)[)] (.*) : (.*)/)
+				element_array = element.scan(/[(](.*)[)] ([0-9]*) : (.*)/)
 				unless element_array.empty? 
 					exchange_hash = { :poster => element_array[0][0], :from => element_array[0][1], :to => element_array[0][2]} 
 					exchanges << exchange_hash
 				end
 
-				alias_array = element.scan(/^(%.*) : (.*)/)
+				alias_array = element.scan(/[(].*[)] (%.*) : (.*)/)
 				unless alias_array.empty?
 					alias_hash = {:id => alias_array[0][0], :elements => alias_array[0][1]} 
 					aliases << alias_hash
@@ -76,15 +76,18 @@ module GeeklistWS
 
 		def get_by_id(game_id)
 			id = @geeklist[:games].find_index { |item| item[:number] == game_id.to_i }
-			game = @geeklist[:games][id]
-			aliases = []
-			@alias_collection.each do |key, value|
-				if value.split(" ").include?(game_id)
-					aliases << key
+			if !id.nil?
+				game = @geeklist[:games][id]
+				aliases = []
+				@alias_collection.each do |key, value|
+					if value.split(" ").include?(game_id)
+						aliases << key
+					end
 				end
+				game[:aliases] = aliases
+				return game
 			end
-			game[:aliases] = aliases
-			game
+			nil
 		end
 
 		def find_id(game_id)

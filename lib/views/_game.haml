@@ -1,9 +1,11 @@
+- game_desc = @converter.create_desc(locals[:game])
 %div{:class => "col-md-2"}
-  - game_desc = @converter.create_desc(locals[:game])
   %a{:href => game_desc[:url]}
     %div{:class => "row"}
-      %img{:src => game_desc[:image], :style => "vertical-align:middle; width:75px; height:75px; margin:0 auto", :class => "thumbnail"}
+      %img{:src => game_desc[:image], :style => "vertical-align:middle; width:80px; height:80px; margin:0 auto", :class => "thumbnail"}
     %div{:class => "row"}
       = "#{game_desc[:title]} (#{game_desc[:number]})"
-  - game[:aliases].each do |a|
+  - game_desc[:aliases].each do |a|
     = "#{a}"
+  - if !game_desc[:actual]
+    %b NIEAKTUALNE?

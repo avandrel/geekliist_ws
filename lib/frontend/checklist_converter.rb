@@ -27,7 +27,8 @@ module GeeklistWS
         def sort_games(exchanges)
             exchanges[0].each do |exchange|
                 exchange[:to].each do |prio|
-                    prio.sort_by! { |hsh| hsh[:title] }
+                    prio.delete_if {|hsh| hsh.nil?}
+                    prio.sort_by! { |hsh| hsh[:title] } unless prio.nil?
                 end
             end
             exchanges
@@ -74,6 +75,8 @@ module GeeklistWS
             description[:title] = game[:title]
             description[:number] = game[:number]
             description[:aliases] = game[:aliases]
+            description[:actual] = check_actual(game[:body])
+            puts description[:body]
 
             game.each do |key,value|
                 if @subdomains.has_key?(key)

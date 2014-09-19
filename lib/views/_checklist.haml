@@ -13,7 +13,7 @@
                 %div{:class => "row"}
                   - slice.each do |ex|
                     %a{:href => "http://www.boardgamegeek.com/geeklist/#{@converter.id}/item/#{ex[:itemid]}#item#{ex[:itemid]}"}
-                      %img{:src => "http://cf.geekdo-images.com/images/pic#{ex[:imageid]}_t.jpg", :style => "vertical-align:middle; width:60px; height:60px; margin:0 auto", :class => "thumbnail"}
+                      %img{:src => "http://cf.geekdo-images.com/images/pic#{ex[:imageid]}_t.jpg", :style => "vertical-align:middle; width:90px; height:90px; margin:0 auto", :class => "thumbnail"}
                       = ex[:title]
                     - ex[:aliases].each do |a|
                       = "<br>#{a}"
