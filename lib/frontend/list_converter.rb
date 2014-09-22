@@ -83,7 +83,13 @@ module GeeklistWS
             description[:url] = "http://www.boardgamegeek.com/boardgame/#{game[:id]}"
             description[:image] = "http://cf.geekdo-images.com/images/pic#{game[:imageid]}_t.jpg"
             description[:title] = game[:title]
-
+            stripped_body = game[:body].gsub(/\[\/?[^\]]+\]/, '')
+            if stripped_body.length > 75
+                description[:short] = "#{stripped_body[0..75]}..."
+            else
+                description[:short] = stripped_body
+            end
+            description[:full] = stripped_body
             game.each do |key,value|
                 if @subdomains.has_key?(key)
                     description[:ranks][@subdomains[key][:rank_name]] = value unless value == 0

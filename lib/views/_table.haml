@@ -20,6 +20,8 @@
                 - game[:desc][:ranks].each do |r_key, r_value|
                   = "#{r_key}: #{r_value}"
                   %br
+                %br
+                %div{"data-toggle" => "tooltip", "title" => "#{game[:desc][:full]}"}= "#{game[:desc][:short]}"
               - else
                 %h5
                   %strong NIEAKTUALNE?
