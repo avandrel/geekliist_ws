@@ -30,6 +30,7 @@ module GeeklistWS
       post "/checklist" do
           puts "checklist"
           @post = true
+          puts params["list"].inspect
           data = GeeklistWS::API::Internal.get_checklist(params["list"], settings.id)
           #puts data.inspect
           @converter = GeeklistWS::Frontend::CheckListConverter.new data
