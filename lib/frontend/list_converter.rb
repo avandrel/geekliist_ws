@@ -1,3 +1,5 @@
+# encoding UTF-8
+
 module GeeklistWS
   module Frontend
     class ListConverter

@@ -1,3 +1,5 @@
+# encoding UTF-8
+
 module GeeklistWS
   module API
     class ListChecker
@@ -37,12 +39,12 @@ module GeeklistWS
 					exchange_collection << {:poster => exchange[:poster], :from => prepare(exchange[:from]), :to => prepare(exchange[:to])} if (!exchange[:from].include?("%") && !exchange[:to].include?("%"))
 				}
 				exchanges.select { |ex| ex[:from].include?("%") }.each do |ex|
-					ex[:from].scan(/(%[0-9a-zA-Z_]*)/).each do |a|
+					ex[:from].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]*)/).each do |a|
 						ex[:from][a[0]] = @alias_collection[a[0]]
 					end
 				end
 				exchanges.select { |ex| ex[:to].include?("%") }.each do |ex|
-					ex[:to].scan(/(%[0-9a-zA-Z_]*)/).each do |a|
+					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]*)/).each do |a|
 						ex[:to][a[0]] = @alias_collection[a[0]]
 					end
 				end

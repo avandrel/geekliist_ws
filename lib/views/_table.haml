@@ -24,7 +24,8 @@
                 %div{"data-toggle" => "tooltip", "title" => "#{game[:desc][:full]}"}= "#{game[:desc][:short]}"
               - else
                 %h5
-                  %strong{"data-toggle" => "tooltip", "title" => "#{game[:desc][:full]}"} NIEAKTUALNE?
+                  %div{"data-toggle" => "tooltip", "title" => "#{game[:desc][:full]}"}
+                    %strong NIEAKTUALNE?
           %td{:style => "vertical-align: middle", :class => "text-center"}
             %big
               %a{:href => "http://www.boardgamegeek.com/user/#{game[:poster]}"}
