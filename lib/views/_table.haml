@@ -28,7 +28,7 @@
                     %strong NIEAKTUALNE?
           %td{:style => "vertical-align: middle", :class => "text-center"}
             %big
-              %a{:href => "http://www.boardgamegeek.com/user/#{game[:poster]}"}
+              %a{:href => "http://www.boardgamegeek.com/user/#{game[:poster][:name]}"}
                 = game[:poster][:name]
                 - if game[:poster][:avatar] != nil
                   %br
