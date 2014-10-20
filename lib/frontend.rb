@@ -6,7 +6,8 @@ module GeeklistWS
   module Frontend	
 	  class Web < Sinatra::Base
       configure do
-        set :id, '178608'
+        #set :id, '178608' - mathtrade 19
+        set :id, '180671'
       end
 
       get "/" do 
@@ -20,6 +21,15 @@ module GeeklistWS
         @converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
 
         haml :listview
+      end
+
+      get "/results*" do
+        puts "Get"
+        data = GeeklistWS::API::Internal.get_resultlist
+        #data = GeeklistWS::API::Internal.get_geeklist("178867")
+        #@converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
+
+        #haml :listview
       end
 
       get "/checklist" do
