@@ -36,6 +36,17 @@ module GeeklistWS
 	  		doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}")))
 	  		doc.at_xpath("//avatarlink").attribute('value').value
 	  	end
+
+	  	def self.read_results
+	  		file = open("https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Wyniki.txt")
+	  		lines = []
+	  		file.readlines.each do |line|
+				scaned_line = line.scan(/[(](\w+)[)]\s(\d+)\s+receives\s[(](\w+)[)]\s+(\d+)\s+and sends to\s[(](\w+)[)]\s+(\d+)/)
+				unless scaned_line.empty? 
+					lines << "#{scaned_line[0][0]} za #{scaned_line[0][1]} dostaje #{scaned_line[0][3]} od #{scaned_line[0][2]} i wysyła do #{scaned_line[0][4]}"
+				end
+			end	
+	  	end
 	end
   end
 end

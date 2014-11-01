@@ -7,6 +7,9 @@ module GeeklistWS
             @subdomains = GeeklistWS::Frontend::Subdomains.create_subdomains
             @id = response[:id]
             @exchanges = sort_games(response[:exchanges])
+            @errors = response[:errors]
+            @original_list = response[:original_list]
+            create_errors
             create_exchanges
     	end
 
@@ -20,6 +23,14 @@ module GeeklistWS
 
         def exchanges
             @flatten_exchanges
+        end
+
+        def original_list
+            @original_list
+        end
+
+        def errors
+            @prepared_errors
         end
 
     	def headers
@@ -44,6 +55,18 @@ module GeeklistWS
                 flat_ex[:to] = exchange[:to]
                 @flatten_exchanges << flat_ex
             end
+        end
+
+        def create_errors
+            @prepared_errors = {}
+            @errors.each_key do |key|
+                case key
+                    when :wrong_line
+                        @prepared_errors["Błędna linia"] = @errors[key] unless @errors[key].empty?
+                    when :missing_alias
+                        @prepared_errors["Brakująca lista nazwana"] = @errors[key] unless @errors[key].empty?
+                end
+             end
         end
 
     	def games(priorities)
@@ -78,7 +101,6 @@ module GeeklistWS
             description[:number] = game[:number]
             description[:aliases] = game[:aliases]
             description[:actual] = check_actual(game[:body])
-            puts description[:body]
 
             game.each do |key,value|
                 if @subdomains.has_key?(key)
@@ -95,6 +117,10 @@ module GeeklistWS
     			return "---"
     		end
     	end
+
+        def has_errors?
+            return !@prepared_errors.empty?
+        end
     end
   end
 end

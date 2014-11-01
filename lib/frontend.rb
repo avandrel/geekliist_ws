@@ -7,7 +7,7 @@ module GeeklistWS
 	  class Web < Sinatra::Base
       configure do
         #set :id, '178608' - mathtrade 19
-        set :id, '180671'
+        set :id, '180671' # mathtrade 19.5
       end
 
       get "/" do 
@@ -40,7 +40,6 @@ module GeeklistWS
       post "/checklist" do
           puts "checklist"
           @post = true
-          puts params["list"].inspect
           data = GeeklistWS::API::Internal.get_checklist(params["list"], settings.id)
           #puts data.inspect
           @converter = GeeklistWS::Frontend::CheckListConverter.new data

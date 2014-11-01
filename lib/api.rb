@@ -36,6 +36,10 @@ module GeeklistWS
         puts "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s"
         response
       end
+
+      def self.get_resultlist
+        resultlist = GeeklistWS::API::Readers.read_results
+      end
     end
 
     class MongoConnector

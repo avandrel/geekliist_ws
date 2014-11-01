@@ -2,8 +2,17 @@
   %form
     %div{:class => "form-group"}
       %label{:for => "name"} Wklej swoją listę wymian
-      %textarea{:class => "form-control", :rows => "5", :name => "list"}
+      %textarea{:class => "form-control", :rows => "5", :name => "list", :wrap => "soft"}
+        - if @converter != nil
+          = @converter.original_list
       %button{:formmethod => "post", :formaction => "http://mathtrade.mgpm.pl/checklist", :type => "submit", :class => "btn btn-info"} Wyślij
+      //%button{:formmethod => "post", :formaction => "http://localhost:9292/checklist", :type => "submit", :class => "btn btn-info"} Wyślij
+  - if @converter != nil
+    %p
+      %strong{:style => "color: red"} W Twojej liście znajdują się błędy:
+      - @converter.errors.each_pair do |key, value|
+        - value.each do |error|
+          = "<br><strong>- #{key}: #{error}</strong>"
   %p
     %b Przykładowy wpis:
     %p (avandrel) %RONIN : 771 819<br>(avandrel) %ACRES : 321 458 657<br>(avandrel) %LCG : 541 239 472 240 68 793 223 229 456<br>(avandrel) 351 : %RONIN 3 5 ; 7 10 11 ; 111<br>(avandrel) 352 : 1<br>(avandrel) 511 : 41 ; 72 130 121 ; %LCG

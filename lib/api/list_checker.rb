@@ -6,6 +6,7 @@ module GeeklistWS
 		def initialize(list, geeklist)
 			@list = list
 			@geeklist = geeklist
+			@errors = { :wrong_line => [], :missing_alias => []}
 		end
 
 		def check
@@ -13,22 +14,34 @@ module GeeklistWS
 			exchanges = []
 			aliases = []
 			@list.each do |element|
+				is_added = false
 				element_array = element.scan(/[(](.*)[)] ([0-9]*) : (.*)/)
 				unless element_array.empty? 
 					exchange_hash = { :poster => element_array[0][0], :from => element_array[0][1], :to => element_array[0][2]} 
 					exchanges << exchange_hash
+					is_added = true
 				end
 
 				alias_array = element.scan(/[(].*[)] (%.*) : (.*)/)
 				unless alias_array.empty?
 					alias_hash = {:id => alias_array[0][0], :elements => alias_array[0][1]} 
 					aliases << alias_hash
+					is_added = true
+				end
+
+				unless is_added
+					@errors[:wrong_line] << element
 				end
 			end
+			puts "List readed"
 			@alias_collection = prepare_aliases(aliases)
+			puts "Aliases prepared"
 			@exchange_collection = prepare_exchanges(exchanges)
+			puts "Exchanges prepared"
 			response[:exchanges] << fill_games()
 			response[:id] = @geeklist[:id]
+			response[:errors] = @errors
+			response[:original_list] = @list.join("\r")
 			response
 		end		
 
@@ -43,9 +56,21 @@ module GeeklistWS
 						ex[:from][a[0]] = @alias_collection[a[0]]
 					end
 				end
+				exchanges_to_delete = []
 				exchanges.select { |ex| ex[:to].include?("%") }.each do |ex|
 					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]*)/).each do |a|
-						ex[:to][a[0]] = @alias_collection[a[0]]
+						if @alias_collection.has_key?(a[0])
+							ex[:to][a[0]] = @alias_collection[a[0]]
+						else
+							exchanges_to_delete << ex
+							@errors[:missing_alias] << a[0]
+						end
+					end
+				end
+
+				unless exchanges_to_delete.empty?
+					exchanges_to_delete.each do |ex|
+						exchanges.delete(ex)
 					end
 				end
 			end
