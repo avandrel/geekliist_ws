@@ -30,7 +30,7 @@ module GeeklistWS
 				end
 
 				unless is_added
-					@errors[:wrong_line] << element
+					@errors[:wrong_line] << element unless element.empty?
 				end
 			end
 			puts "List readed"
