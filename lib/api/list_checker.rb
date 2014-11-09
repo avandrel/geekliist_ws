@@ -6,7 +6,7 @@ module GeeklistWS
 		def initialize(list, geeklist)
 			@list = list
 			@geeklist = geeklist
-			@errors = { :wrong_line => [], :missing_alias => []}
+			@errors = { :wrong_line => [], :missing_alias => [], :missing_game => []}
 		end
 
 		def check
@@ -113,6 +113,8 @@ module GeeklistWS
 				end
 				game[:aliases] = aliases
 				return game
+			else
+				@errors[:missing_game] << game_id
 			end
 			nil
 		end

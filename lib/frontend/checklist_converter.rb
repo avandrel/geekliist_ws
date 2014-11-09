@@ -65,6 +65,8 @@ module GeeklistWS
                         @prepared_errors["Błędna linia"] = @errors[key] unless @errors[key].empty?
                     when :missing_alias
                         @prepared_errors["Brakująca lista nazwana"] = @errors[key] unless @errors[key].empty?
+                    when :missing_game
+                        @prepared_errors["Gra o tym id nie istnieje"] = @errors[key] unless @errors[key].empty?
                 end
              end
         end
