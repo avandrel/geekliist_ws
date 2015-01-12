@@ -37,8 +37,9 @@ module GeeklistWS
         response
       end
 
-      def self.get_resultlist
-        resultlist = GeeklistWS::API::Readers.read_results
+      def self.get_resultlist(id)
+        resultlist = GeeklistWS::API::Readers.read_results id
+        resultlist
       end
     end
 
@@ -50,7 +51,6 @@ module GeeklistWS
     	end
     	
     	def games_collection
-    		#connect.authenticate("geeklist_client", "geeklist")
             connect["games"]
     	end
 
@@ -60,6 +60,10 @@ module GeeklistWS
 
         def list_collection
             connect["list_cache"]
+        end
+
+        def results_collection
+            connect["results"]
         end
     end
   end
