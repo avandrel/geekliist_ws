@@ -97,7 +97,21 @@ module GeeklistWS
                     description[:ranks][@subdomains[key][:rank_name]] = value unless value == 0
                 end
             end
+            if !game[:children].nil? && !game[:children].empty?
+                description[:children] = []
+                game[:children].each do |child|
+                    description[:children] << create_child(child)
+                end
+            end
             description
+        end
+
+        def create_child(raw_child)
+            child = {}
+            child[:url] = "http://www.boardgamegeek.com/boardgame/#{raw_child[:id]}"
+            child[:image] = raw_child[:thumb_url]
+            child[:title] = raw_child[:title]
+            child
         end
 
     	def create_number(number)

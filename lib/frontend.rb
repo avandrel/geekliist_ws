@@ -12,6 +12,7 @@ module GeeklistWS
         #set :id, '178608' - mathtrade 19
         #set :id, '180671' # mathtrade 19.5
         set :id, '185291' # mathtrade 20
+        #set :id, '178867' #testlist
       end
 
       get "/" do 

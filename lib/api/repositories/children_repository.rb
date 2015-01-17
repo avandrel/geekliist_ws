@@ -2,33 +2,33 @@
 
 module GeeklistWS
   module API
-    class GamesRepository
+    class ChildrenRepository
     	def initialize
     		connector = MongoConnector.new 
-    		@games_collection = connector.games_collection
+    		@children_collection = connector.children_collection
             @all_collection = {}
-            connector.games_collection.find().each do |game|
-                game.delete("_id")
-                symbolize_keys(game)
-                @all_collection[game[:id]] = game
+            connector.children_collection.find().each do |child|
+                child.delete("_id")
+                symbolize_keys(child)
+                @all_collection[child[:id]] = child
             end
             @all_collection
     	end
 
-    	def game_in_repo?(id)
+    	def child_in_repo?(id)
     		#@games_collection.find_one({:id => "#{id}"}, {:fields => [:id]}) != nil
             @all_collection.has_key?(id)
     	end
 
-    	def add_game(game)  		
+    	def add_child(game)  		
     		game.delete(:poster) unless game[:poster] == nil
             game.delete(:number) unless game[:number] == nil
-    		@games_collection.insert(game)
+    		@children_collection.insert(game)
             symbolize_keys(game)
             game.clone
     	end
 
-    	def get_game(id)
+    	def get_child(id)
     		#merged_game = @games_collection.find_one({:id => "#{game[:id]}"})
             #merged_game.delete("_id")
             #symbolize_keys(merged_game)

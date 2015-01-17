@@ -54,6 +54,10 @@ module GeeklistWS
             connect["games"]
     	end
 
+        def children_collection
+            connect["children"]
+        end
+
         def posters_collection
             connect["posters"]
         end

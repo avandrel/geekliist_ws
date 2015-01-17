@@ -13,7 +13,7 @@ module GeeklistWS
 	  			list = list_repository.get_list(id)
 	  		else
 	  			puts "List from BGG"
-	  			list = open("http://www.boardgamegeek.com/xmlapi/geeklist/#{id}").read
+	  			list = open("http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1").read
 	  			list_repository.add_list(id, list)
 	  		end
 	  		doc = Nokogiri::HTML(list, nil, "UTF-8")
@@ -30,6 +30,15 @@ module GeeklistWS
 	  		doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{game[:id]}?stats=1"))
 	  		ratings = doc.xpath("//boardgames/boardgame/statistics/ratings")
 	  		game.merge(Parsers.parse_rating(ratings))
+	  	end
+
+	  	def self.read_child(id)
+	  		doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{id}?stats=1"))
+	  		child ||= {}
+	  		child[:id] = id
+	  		child[:title] = doc.xpath("//boardgames/boardgame/name")[0].text
+            child[:thumb_url] = doc.xpath("//boardgames/boardgame/thumbnail").text[2..-1]
+            child
 	  	end
 
 	  	def self.read_poster(name)

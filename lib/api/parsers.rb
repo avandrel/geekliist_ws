@@ -13,7 +13,20 @@ module GeeklistWS
             game[:imageid] = item.attribute('imageid').value
             game[:itemid] = item.attribute('id').value
     		game[:number] = number
-            game[:body] = item.content
+            game[:body] = item.children[0].text
+            game[:children] = []
+            item.children.each do |child|
+                if  child.name == "comment"
+                    game_child = {}
+                    matchdata = child.children[0].text.match(/\[\D*thing=(\d*)\D*\]/)
+                    unless  matchdata.nil?
+                        game_child[:id] = matchdata[1]
+                        game_child[:body] = matchdata[0]
+                        game_child[:poster] = game[:poster]
+                        game[:children] << game_child
+                    end
+                end
+            end
   		game
     	end
 
