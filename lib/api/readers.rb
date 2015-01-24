@@ -36,7 +36,7 @@ module GeeklistWS
 	  		doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{id}?stats=1"))
 	  		child ||= {}
 	  		child[:id] = id
-	  		child[:title] = doc.xpath("//boardgames/boardgame/name")[0].text
+	  		child[:title] = doc.xpath('//boardgames/boardgame/name[@primary]')[0].text
             child[:thumb_url] = doc.xpath("//boardgames/boardgame/thumbnail").text[2..-1]
             child
 	  	end

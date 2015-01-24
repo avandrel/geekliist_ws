@@ -23,7 +23,7 @@
                   %br
                 %br
                 %div{"data-toggle" => "tooltip", "title" => "#{game[:desc][:full]}"}= "#{game[:desc][:short]}"
-                - if !game[:desc][:children].nil?
+                - if !game[:desc][:children].nil? && !game[:desc][:children].empty?
                   - game[:desc][:children].each do |child|
                     %p
                       %a{:href => child[:url]}

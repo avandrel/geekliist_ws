@@ -81,7 +81,7 @@ module GeeklistWS
         end
 
         def create_desc(game)
-            description = { :ranks => {}}
+            description = { :ranks => {}, :children => []}
             description[:url] = "http://www.boardgamegeek.com/boardgame/#{game[:id]}"
             description[:image] = "http://cf.geekdo-images.com/images/pic#{game[:imageid]}_t.jpg"
             description[:title] = game[:title]
@@ -98,9 +98,9 @@ module GeeklistWS
                 end
             end
             if !game[:children].nil? && !game[:children].empty?
-                description[:children] = []
                 game[:children].each do |child|
-                    description[:children] << create_child(child)
+                    puts child.inspect
+                    description[:children] << create_child(child) unless child[:title].nil?
                 end
             end
             description
