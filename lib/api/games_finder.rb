@@ -10,7 +10,7 @@ module GeeklistWS
     	def find_games
             puts "Init"
     		@games_repository = GamesRepository.new
-            @posters_repository = PostersRepository.new
+            @posters_repository = PostersRepository.new true
             @children_repository = ChildrenRepository.new
     		response = { :title => @geeklist[:title], :games => [], :posters => {} }
             puts "Init finished"            
@@ -41,6 +41,7 @@ module GeeklistWS
             
             puts "\nFinished. Cached: #{@database_count}, Online: #{@bgg_count}"
 
+
             posters.each do |poster|
                 print_and_flush(".")
                 if @posters_repository.poster_in_repo?(poster)
@@ -62,7 +63,8 @@ module GeeklistWS
                 response[:posters][poster] = readed_poster
             end
 
-            puts "\nFinished. Posters: #{posters.count}"
+            #response[:posters] = @posters_repository.get_all_posters
+            puts "\nFinished. All posters: #{response[:posters].count}, list posters: #{posters.count}"
 
     		response
     	end

@@ -3,16 +3,18 @@
 module GeeklistWS
   module API
     class PostersRepository
-    	def initialize
+    	def initialize(all)
     		connector = MongoConnector.new 
     		@posters_collection = connector.posters_collection
-            @all_collection = {}
-            connector.posters_collection.find().each do |poster|
-                poster.delete("_id")
-                symbolize_keys(poster)
-                @all_collection[poster[:name]] = poster
+            if all
+                @all_collection = {}
+                connector.posters_collection.find().each do |poster|
+                    poster.delete("_id")
+                    symbolize_keys(poster)
+                    @all_collection[poster[:name]] = poster
+                end
+                @all_collection
             end
-            @all_collection
     	end
 
     	def poster_in_repo?(name)
@@ -29,7 +31,6 @@ module GeeklistWS
 
         def update_poster(poster)
             result = @posters_collection.update({ "name" => poster[:name]}, poster)
-            puts result
         end
 
     	def get_poster(name)
@@ -43,6 +44,11 @@ module GeeklistWS
             poster.keys.each do |key|
                 poster[(key.to_sym rescue key) || key] = poster.delete(key)
             end
+        end
+
+        def one_poster_in_repo(poster)
+            result = @posters_collection.find_one({:name => "#{poster}"}, {:fields => [:name]})
+            result.nil? ? nil : result
         end
     end
   end

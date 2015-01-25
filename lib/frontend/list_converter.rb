@@ -11,6 +11,7 @@ module GeeklistWS
             @category = category
             @subdomains = GeeklistWS::Frontend::Subdomains.create_subdomains
             @user = user
+            @prepared_user = prepare_user(user) unless @user.nil? && !@posters[@user].nil?
     	end
 
         def id
@@ -83,10 +84,17 @@ module GeeklistWS
         end
 
         def create_collection(id)
+            collection = []
             if !@user.nil? && !@posters[@user].nil? && !@posters[@user][:collection].nil? && !@posters[@user][:collection][id].nil?
-                collection = []
                 @posters[@user][:collection][id].each do |key, value|
                     collection << key unless value != "1"
+                end
+            end
+            if !@prepared_user.nil?
+                if !@prepared_user[:collection].nil? && !@prepared_user[:collection][id].nil?
+                    @prepared_user[:collection][id].each do |key, value|
+                     collection << key unless value != "1"
+                    end
                 end
             end
             (collection.nil? || collection.empty?) ? nil : collection
@@ -132,6 +140,31 @@ module GeeklistWS
     			return "---"
     		end
     	end
+
+        def prepare_user(user)
+            if @posters[@user].nil?
+                @posters_repository = GeeklistWS::API::PostersRepository.new false
+                readed_poster = @posters_repository.one_poster_in_repo(user)
+                if !readed_poster.nil?
+                    puts "User in posters repo"
+                    if readed_poster[:collection].nil?
+                        poster_collection = GeeklistWS::API::Readers.read_posters_collection(user)
+                        unless poster_collection.nil?
+                            readed_poster[:collection] = poster_collection
+                            @posters_repository.update_poster(readed_poster)
+                        end
+                    end
+                else
+                    puts "User not found"
+                    avatar = GeeklistWS::API::Readers.read_poster(user)
+                    avatar = "http://mathtrade.mgpm.pl/img/meeple.png" unless avatar != "N/A"
+                    poster_collection = GeeklistWS::API::Readers.read_posters_collection(user)
+                    @posters_repository.add_poster(user, avatar, poster_collection)
+                    readed_poster = { :name => user, :avatar => avatar, :collection => poster_collection}
+                end
+            end
+            readed_poster
+        end
     end
   end
 end
