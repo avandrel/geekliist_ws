@@ -46,6 +46,18 @@ module GeeklistWS
 	  		doc.at_xpath("//avatarlink").attribute('value').value
 	  	end
 
+	  	def self.read_posters_collection(name)
+	  		doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi/collection/#{name}")))
+	  		if doc.xpath("//message").empty?
+	  			collection ||= {}
+	  			doc.xpath("//item").each do |item|
+	  				parsed_item = Parsers.parse_collection_item(item)
+	  				collection[parsed_item[:id]] = parsed_item
+	  			end
+	  		end
+	  		collection
+	  	end
+	  		
 	  	def self.read_results(id)
 	  		results_repository = ResultsRepository.new
 	  		if results_repository.result_in_repo?(id)

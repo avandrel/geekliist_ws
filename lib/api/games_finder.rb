@@ -45,12 +45,21 @@ module GeeklistWS
                 print_and_flush(".")
                 if @posters_repository.poster_in_repo?(poster)
                     readed_poster = @posters_repository.get_poster(poster)
-                    avatar = readed_poster[:avatar]
+                    if readed_poster[:collection].nil?
+                        poster_collection = Readers.read_posters_collection(poster)
+                        unless poster_collection.nil?
+                            readed_poster[:collection] = poster_collection
+                            @posters_repository.update_poster(readed_poster)
+                        end
+                    end
                 else
                     avatar = Readers.read_poster(poster)
-                    @posters_repository.add_poster(poster, avatar)
+                    avatar = "http://mgpm.pl/temp/meeple.png" unless avatar != "N/A"
+                    poster_collection = Readers.read_posters_collection(poster)
+                    @posters_repository.add_poster(poster, avatar, poster_collection)
+                    readed_poster = { :name => poster, :avatar => avatar, :collection => poster_collection}
                 end
-                response[:posters][poster] = avatar unless avatar == "N/A"
+                response[:posters][poster] = readed_poster
             end
 
             puts "\nFinished. Posters: #{posters.count}"

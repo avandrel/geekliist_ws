@@ -17,6 +17,8 @@
             %div{:style => "overflow: hidden;"}
               %h4
                 %a{:href => game[:desc][:url]}= game[:desc][:title]
+              - if !game[:collection].nil?
+                = haml :_collection, :locals => { :collection => game[:collection] }
               - if game[:actual]
                 - game[:desc][:ranks].each do |r_key, r_value|
                   = "#{r_key}: #{r_value}"

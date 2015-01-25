@@ -23,6 +23,7 @@ module GeeklistWS
     	def add_child(game)  		
     		game.delete(:poster) unless game[:poster] == nil
             game.delete(:number) unless game[:number] == nil
+            game[:created] = DateTime.now.to_time.utc
     		@children_collection.insert(game)
             symbolize_keys(game)
             game.clone

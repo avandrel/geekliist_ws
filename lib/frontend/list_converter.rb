@@ -3,13 +3,14 @@
 module GeeklistWS
   module Frontend
     class ListConverter
-    	def initialize(response, category)
+    	def initialize(response, category, user)
     		@games = response[:games]
             @title = response[:title]
             @posters = response[:posters]
             @id = response[:id]
             @category = category
             @subdomains = GeeklistWS::Frontend::Subdomains.create_subdomains
+            @user = user
     	end
 
         def id
@@ -42,10 +43,11 @@ module GeeklistWS
                     #:title => game[:title],
                     #:url => "http://www.boardgamegeek.com/boardgame/#{game[:id]}",
                     #:image => "http://cf.geekdo-images.com/images/pic#{game[:id]}_t.jpg",
-    				:poster => { :name => game[:poster], :avatar => @posters[game[:poster]] },
+    				:poster => { :name => game[:poster], :avatar => @posters[game[:poster]][:avatar] },
     				:average => create_number(game[:average]),
     				:boardgame => create_number(game[:boardgame]),
                     :desc => create_desc(game),
+                    :collection => create_collection(game[:id]),
                     :actual => check_actual(game[:body])
     			}
                 prapared_games << prepared_game if check_category(prepared_game[:desc])
@@ -80,6 +82,16 @@ module GeeklistWS
             end
         end
 
+        def create_collection(id)
+            if !@user.nil? && !@posters[@user].nil? && !@posters[@user][:collection].nil? && !@posters[@user][:collection][id].nil?
+                collection = []
+                @posters[@user][:collection][id].each do |key, value|
+                    collection << key unless value != "1"
+                end
+            end
+            (collection.nil? || collection.empty?) ? nil : collection
+        end
+
         def create_desc(game)
             description = { :ranks => {}, :children => []}
             description[:url] = "http://www.boardgamegeek.com/boardgame/#{game[:id]}"
@@ -99,7 +111,6 @@ module GeeklistWS
             end
             if !game[:children].nil? && !game[:children].empty?
                 game[:children].each do |child|
-                    puts child.inspect
                     description[:children] << create_child(child) unless child[:title].nil?
                 end
             end

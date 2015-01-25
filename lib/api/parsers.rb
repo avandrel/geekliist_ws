@@ -38,6 +38,24 @@ module GeeklistWS
     		end
     		hash_rating
     	end
+
+        def self.parse_collection_item(item)
+            collection_item = {}
+            collection_item[:id] = item.attribute('objectid').value
+            item.children.each do |child|
+                if child.name == "status"
+                    collection_item[:own] = child.attribute('own').value
+                    collection_item[:prevowned] = child.attribute('prevowned').value
+                    collection_item[:fortrade] = child.attribute('fortrade').value
+                    collection_item[:want] = child.attribute('want').value
+                    collection_item[:wanttoplay] = child.attribute('wanttoplay').value
+                    collection_item[:wanttobuy] = child.attribute('wanttobuy').value
+                    collection_item[:wishlist] = child.attribute('wishlist').value
+                    collection_item[:preordered] = child.attribute('preordered').value
+                end
+            end
+            collection_item
+        end
     end
   end
 end

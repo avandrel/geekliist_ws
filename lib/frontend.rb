@@ -23,7 +23,7 @@ module GeeklistWS
         puts "Get"
         data = GeeklistWS::API::Internal.get_geeklist(settings.id)
         #data = GeeklistWS::API::Internal.get_geeklist("178867")
-        @converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
+        @converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1], params[:bgguser]
 
         haml :listview
       end
