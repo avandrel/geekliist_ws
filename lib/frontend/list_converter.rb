@@ -18,6 +18,10 @@ module GeeklistWS
             @id
         end
         
+        def user
+            @prepared_user.nil? ? @user : @prepared_user[:name]
+        end
+
         def title
             return "#{@subdomains[@category.to_sym][:sub_name]} :: #{@title}" unless @category.nil? || @category.empty?
             @title

@@ -20,7 +20,7 @@ module GeeklistWS
       end
 
       get "/list*" do
-        puts "Get"
+        puts "Method: GET, User: #{params[:bgguser]}"
         data = GeeklistWS::API::Internal.get_geeklist(settings.id)
         #data = GeeklistWS::API::Internal.get_geeklist("178867")
         @converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1], params[:bgguser]
