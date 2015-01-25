@@ -54,7 +54,7 @@ module GeeklistWS
                     end
                 else
                     avatar = Readers.read_poster(poster)
-                    avatar = "http://mgpm.pl/temp/meeple.png" unless avatar != "N/A"
+                    avatar = "http://mathtrade.mgpm.pl/img/meeple.png" unless avatar != "N/A"
                     poster_collection = Readers.read_posters_collection(poster)
                     @posters_repository.add_poster(poster, avatar, poster_collection)
                     readed_poster = { :name => poster, :avatar => avatar, :collection => poster_collection}

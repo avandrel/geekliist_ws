@@ -1,3 +1,2 @@
-%div
-  - locals[:collection].each do |category|
-    = category
+- locals[:collection].each do |category|
+  %img{:src => "http://mathtrade.mgpm.pl/img/#{category}.png", :style => "width:30px; height:30x;", :class => "img-thumbnail", :title => category }
