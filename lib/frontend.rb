@@ -61,6 +61,10 @@ module GeeklistWS
           @converter = GeeklistWS::Frontend::CheckListConverter.new data
           haml :checklistview
       end
+
+      error do
+        "Application error. Probably BGG timeout. Please try again later."
+      end
 	  end
   end
 end
