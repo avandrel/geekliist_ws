@@ -69,6 +69,10 @@ module GeeklistWS
         def results_collection
             connect["results"]
         end
+
+        def bggusers_collection
+            connect["bggusers"]
+        end
     end
   end
 end
