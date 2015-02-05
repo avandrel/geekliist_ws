@@ -92,6 +92,7 @@ module GeeklistWS
         def bggusers_collection
             connect["bggusers"]
         end
+end
     end
   end
 end
