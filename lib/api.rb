@@ -37,8 +37,24 @@ module GeeklistWS
         response
       end
 
-      def self.get_resultlist(id)
-        resultlist = GeeklistWS::API::Readers.read_results id
+      def self.get_resultlist(id, url)
+        puts "Start reading geeklist"
+        geeklist = GeeklistWS::API::Readers.read_geeklist(id)
+        puts "Geeklist loaded"
+        games_finder = GeeklistWS::API::GamesFinder.new geeklist
+        
+        resultlist = GeeklistWS::API::Readers.read_results id, url
+        resultlist[:games] = games_finder.find_some_games resultlist[:games]
+        resultlist
+      end
+
+      def self.get_wantlist(id, url)
+        resultlist = GeeklistWS::API::Readers.read_wantlist id, url
+        resultlist
+      end
+
+      def self.get_stats(id)
+        resultlist = GeeklistWS::API::Stats.create_stats id
         resultlist
       end
     end
@@ -68,6 +84,10 @@ module GeeklistWS
 
         def results_collection
             connect["results"]
+        end
+
+        def wantlist_collection
+            connect["wantlists"]
         end
     end
   end

@@ -13,10 +13,11 @@ module GeeklistWS
     	end
 
     	def get_result(id)
-    		result = @results_collection.find_one({:id => "#{id}"})
+            puts id
+    		result = @results_collection.find_one({:id => id})
             result.delete("_id")
+            symbolize_keys(result)
             result
-            #symbolize_keys(result)
     	end
 
         def symbolize_keys(result)

@@ -74,6 +74,16 @@ module GeeklistWS
     		$stdout.flush
   	  end
 
+      def find_some_games(games)
+        games_repository = GamesRepository.new
+        readed_games = {}
+        games.each do |game|
+            readed_game = games_repository.get_game(@geeklist[:games].find{ |list_game| list_game[:number] == game.to_i }[:id])
+            readed_games[game] = { :id => readed_game[:id], :title => readed_game[:title], :imageid => readed_game[:imageid] }
+        end
+        readed_games
+      end
+
       def get_game(game)
         if @games_repository.game_in_repo?(game[:id])
             #puts "Reading from repo #{game[:id]}"

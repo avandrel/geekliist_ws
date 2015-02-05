@@ -1,0 +1,25 @@
+%div{:style => "margin-left:auto;margin-right:auto;width: 960px"} 
+  %table{:id => "mytable", :class => "table"}
+    %thead
+      %tr
+      - @converter.headers.each do |header|
+        %th{:class => "header"}= header
+    %tbody
+      - @converter.exchanges.each do |item|
+        %tr
+          %td{:style => "vertical-align: middle", :class => "text-center"}
+            %a{:href => item[:item][:desc][:url]}
+              %div{:class => "row"}
+                = "#{item[:item][:user_id]}"
+              %div{:class => "row"}
+                %img{:src => item[:item][:desc][:image], :style => "vertical-align:middle; width:80px; height:80px; margin:0 auto", :class => "thumbnail"}
+              %div{:class => "row"}
+                = "#{item[:item][:desc][:title]} (#{item[:item][:desc][:number]})"
+          %td{:style => "vertical-align: middle", :class => "text-center"}
+            %a{:href => item[:sends][:desc][:url]}
+              %div{:class => "row"}
+                = "#{item[:sends][:user_id]}"
+              %div{:class => "row"}
+                %img{:src => item[:sends][:desc][:image], :style => "vertical-align:middle; width:80px; height:80px; margin:0 auto", :class => "thumbnail"}
+              %div{:class => "row"}
+                = "#{item[:sends][:desc][:title]} (#{item[:sends][:desc][:number]})"

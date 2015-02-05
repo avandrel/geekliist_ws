@@ -13,6 +13,14 @@ module GeeklistWS
         #set :id, '180671' # mathtrade 19.5
         set :id, '185291' # mathtrade 20
         #set :id, '178867' #testlist
+        set :results, { 178608 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Wyniki.txt",
+                        180671 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319,5%20-%20Wyniki.txt",
+                        185291 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2320%20-%20Wyniki.txt"
+                      }
+        set :lists, { 178608 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Listy.txt",
+                        180671 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319,5%20-%20Listy.txt",
+                        185291 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2320%20-%20Listy.txt"
+                      }
       end
 
       get "/" do 
@@ -28,9 +36,9 @@ module GeeklistWS
         haml :listview
       end
 
-      get "/results*" do
+      get "/stats*" do
         puts "Get"
-        @data = GeeklistWS::API::Internal.get_resultlist
+        @data = GeeklistWS::API::Internal.get_stats(185291)
 
         #data = GeeklistWS::API::Internal.get_geeklist("178867")
         #@converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
@@ -40,12 +48,31 @@ module GeeklistWS
 
       get "/json_results*" do
         puts "Get"
-        @data = GeeklistWS::API::Internal.get_resultlist(settings.id)
+        @data = GeeklistWS::API::Internal.get_resultlist(185291, settings.results[185291])
 
         #data = GeeklistWS::API::Internal.get_geeklist("178867")
         #@converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
 
         json @data.to_json
+      end
+
+      get "/json_lists*" do
+        puts "Get"
+        @data = GeeklistWS::API::Internal.get_wantlist(185291, settings.lists[185291])
+
+        #data = GeeklistWS::API::Internal.get_geeklist("178867")
+        #@converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
+
+        json @data.to_json
+      end
+
+      get "/results*" do
+        puts "Get"
+        data = GeeklistWS::API::Internal.get_resultlist(185291, settings.results[185291])
+        #data = GeeklistWS::API::Internal.get_geeklist("178867")
+        @converter = GeeklistWS::Frontend::ResultsConverter.new data
+
+        haml :resultsview
       end
 
       get "/checklist" do

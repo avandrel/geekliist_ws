@@ -58,30 +58,135 @@ module GeeklistWS
 	  		collection
 	  	end
 	  		
-	  	def self.read_results(id)
+	  	def self.read_results(id, url)
 	  		results_repository = ResultsRepository.new
 	  		if results_repository.result_in_repo?(id)
 	  			result = results_repository.get_result(id)
 	  			result
 	  		else
-		  		file = open("https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319,5%20-%20Wyniki.txt")
+		  		file = open(url)
 		  		trades = []
+		  		games = []
 		  		file.readlines.each do |line|
-					scaned_line = line.scan(/[(](\w+)[)]\s(\d+)\s+receives\s[(](\w+)[)]\s+(\d+)\s+and sends to\s[(](\w+)[)]\s+(\d+)/)
+					scaned_line = line.scan(/[(](.+)[)]\s(\d+)\s+receives\s[(](.+)[)]\s+(\d+)\s+and sends to\s[(](.+)[)]\s+(\d+)/)
 					unless scaned_line.empty? 
 						trades << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] }, 
 											:receives => { :user_id => scaned_line[0][2], :game_id => scaned_line[0][3] },
 											:sends => { :user_id => scaned_line[0][4], :game_id => scaned_line[0][5] }
 										}
+						games << scaned_line[0][1] unless games.include?(scaned_line[0][1])
 					end
-					scaned_line = line.scan(/[(](\w+)[)]\s(\d+)\s+does not trade/)
+					scaned_line = line.scan(/[(](.+)[)]\s(\d+)\s+does not trade/)
 					unless scaned_line.empty?
 						trades << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] } }			
 					end
 				end
-				{ :id => id, :items => trades }
+				{ :id => id, :items => trades, :games => games}
 			end
 	  	end
+
+	  	def self.read_wantlist(id, url)
+			wantlist_repository = WantlistRepository.new
+	  		if wantlist_repository.wantlist_in_repo?(id)
+	  			result = wantlist_repository.get_wantlist(id)
+	  			result
+	  		else
+		  		file = open(url)
+		  		wants = []
+				aliases = []
+		  		file.readlines.each do |line|
+		  			is_added = false
+					element_array = line.scan(/[(](.*)[)] ([0-9]*) : (.*)/)
+		  			unless element_array.empty? 
+						exchange_hash = { :poster => element_array[0][0], :from => element_array[0][1], :to => element_array[0][2]} 
+						wants << exchange_hash
+						is_added = true
+					end
+
+					alias_array = line.scan(/[(](.*)[)] (%.*)\s?: (.*)/)
+					unless alias_array.empty?
+						alias_hash = { :poster => alias_array[0][0].strip, :id => alias_array[0][1].strip, :elements => alias_array[0][2].strip} 
+						aliases << alias_hash
+						is_added = true
+					end
+		  		end
+		  		puts "List readed"
+			@alias_collection = prepare_aliases(aliases)
+			#puts aliases.inspect
+			#puts @alias_collection.inspect
+			@wantlist_collection = prepare_wantlist(wants)
+			#puts @exchange_collection.inspect
+			end
+
+	  	end
+
+	  	def self.prepare_wantlist(wants)
+			wants_collection = []
+			while wants.count > 0
+				wants.delete_if { |wants|
+					wants_collection << {:poster => wants[:poster], :from => prepare(wants[:from]), :to => prepare(wants[:to])} if (!wants[:from].include?("%") && !wants[:to].include?("%"))
+				}
+				wants.select { |ex| ex[:from].include?("%") }.each do |ex|
+					ex[:from].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]*)/).each do |a|
+						ex[:from][a[0]] = @alias_collection[ex[:poster]][a[0]]
+					end
+				end
+				wants_to_delete = []
+				wants.select { |ex| ex[:to].include?("%") }.each do |ex|
+					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]*)/).each do |a|
+						if @alias_collection[ex[:poster]].has_key?(a[0])
+							ex[:to][a[0]] = @alias_collection[ex[:poster]][a[0]]
+						else
+							wants_to_delete << ex
+							puts "Missing alias for #{ex[:poster]}: #{a[0]}"
+						end
+					end
+				end
+
+				unless wants_to_delete.empty?
+					wants_to_delete.each do |ex|
+						wants.delete(ex)
+					end
+				end
+			end
+			wants_collection
+		end
+
+		def self.prepare(to)
+			to.include?(";") ? to.split(';').map! {|x| x.split(" ")} : [to.split(" ")]
+		end
+
+		def self.prepare_aliases(aliases)
+			alias_collection = {}
+			while aliases.count > 0
+				aliases.delete_if {|a| add_elem_to_hash(a, alias_collection) if !a[:elements].include?("%")}
+				aliases.each do |alias_in_aliases|
+					if alias_in_aliases[:elements].include?("%")
+						found_aliases = alias_in_aliases[:elements].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]*)/)
+						i = 0
+						while i < found_aliases.count
+							if alias_collection[alias_in_aliases[:poster]].has_key?(found_aliases[i][0])
+								alias_in_aliases[:elements].sub!(found_aliases[i][0], alias_collection[alias_in_aliases[:poster]][found_aliases[i][0]])
+							end
+							i += 1
+						end
+					end
+				end
+			end
+			alias_collection
+		end
+
+		def self.add_elem_to_hash(elem, alias_collection)
+			if alias_collection[elem[:poster]].nil?
+				alias_collection[elem[:poster]] = {}
+			end
+			alias_collection[elem[:poster]][elem[:id]] = elem[:elements]
+		end
+
+		def self.print_and_flush(str)
+    		print str
+    		$stdout.flush
+  	  	end
 	end
   end
 end
