@@ -1,4 +1,5 @@
-# encoding UTF-8
+#!/bin/env ruby
+# encoding: utf-8
 
 module GeeklistWS
   module API

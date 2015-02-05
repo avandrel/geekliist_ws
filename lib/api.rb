@@ -88,6 +88,9 @@ module GeeklistWS
 
         def wantlist_collection
             connect["wantlists"]
+
+        def bggusers_collection
+            connect["bggusers"]
         end
     end
   end

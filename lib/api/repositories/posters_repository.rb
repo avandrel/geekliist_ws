@@ -5,8 +5,8 @@ module GeeklistWS
     class PostersRepository
     	def initialize(all)
     		connector = MongoConnector.new 
-    		@posters_collection = connector.posters_collection
             if all
+                @posters_collection = connector.posters_collection
                 @all_collection = {}
                 connector.posters_collection.find().each do |poster|
                     poster.delete("_id")
@@ -14,6 +14,8 @@ module GeeklistWS
                     @all_collection[poster[:name]] = poster
                 end
                 @all_collection
+            else
+                @posters_collection = connector.bggusers_collection
             end
     	end
 
@@ -22,16 +24,12 @@ module GeeklistWS
             @all_collection.has_key?(name)
     	end
 
-    	def add_poster(poster, avatar, posters_collection)
+    	def add_poster(poster, avatar)
             payload = { :name => poster, :avatar => avatar }
-            payload[:collection] = posters_collection unless posters_collection.nil?
+            #payload[:collection] = posters_collection unless posters_collection.nil?
             payload[:created] = DateTime.now.to_time.utc
     		@posters_collection.insert(payload)
     	end
-
-        def update_poster(poster)
-            result = @posters_collection.update({ "name" => poster[:name]}, poster)
-        end
 
     	def get_poster(name)
     		#merged_game = @games_collection.find_one({:id => "#{game[:id]}"})
@@ -46,9 +44,15 @@ module GeeklistWS
             end
         end
 
-        def one_poster_in_repo(poster)
+        def one_user_in_repo(poster)
             result = @posters_collection.find_one({:name => "#{poster}"}, {:fields => [:name]})
             result.nil? ? nil : result
+        end
+
+        def add_user(poster, posters_collection)
+            payload = { :name => poster, :collection => posters_collection }
+            payload[:created] = DateTime.now.to_time.utc
+            @posters_collection.insert(payload)
         end
     end
   end
