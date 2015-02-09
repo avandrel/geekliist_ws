@@ -11,8 +11,10 @@ module GeeklistWS
       configure do
         #set :id, '178608' - mathtrade 19
         #set :id, '180671' # mathtrade 19.5
-        set :id, '185291' # mathtrade 20
+        #set :id, '185291' # mathtrade 20
         #set :id, '178867' #testlist
+        set :id, '187035' #mathtrade 20,5
+        
         set :results, { 178608 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Wyniki.txt",
                         180671 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319,5%20-%20Wyniki.txt",
                         185291 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2320%20-%20Wyniki.txt"
