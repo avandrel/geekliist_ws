@@ -4,12 +4,13 @@
 module GeeklistWS
   module Frontend
     class CheckListConverter
-    	def initialize(response)
+    	def initialize(response, url)
             @subdomains = GeeklistWS::Frontend::Subdomains.create_subdomains
             @id = response[:id]
             @exchanges = sort_games(response[:exchanges])
             @errors = response[:errors]
             @original_list = response[:original_list]
+            @url = url
             create_errors
             create_exchanges
     	end
@@ -32,6 +33,10 @@ module GeeklistWS
 
         def errors
             @prepared_errors
+        end
+        
+        def url
+            @url
         end
 
     	def headers

@@ -3,7 +3,7 @@
 module GeeklistWS
   module Frontend
     class ListConverter
-    	def initialize(response, category, user)
+    	def initialize(response, category, user, url)
     		@games = response[:games]
             @title = response[:title]
             @posters = response[:posters]
@@ -12,6 +12,7 @@ module GeeklistWS
             @subdomains = GeeklistWS::Frontend::Subdomains.create_subdomains
             @poster = user
             @prepared_user = prepare_user(user) unless user.nil?
+            @url = url
     	end
 
         def id
@@ -35,6 +36,10 @@ module GeeklistWS
             @subdomains
         end
 
+        def url
+            @url
+        end
+        
     	def headers
     		["Id","Title", "Poster", "Average Rating", "Overall Rank"]
     	end
@@ -61,7 +66,7 @@ module GeeklistWS
     	end
 
         def check_actual(body)
-            !body.downcase.include?("nieaktualne")
+            body.nil? ? false : !body.downcase.include?("nieaktualne")
         end
 
         def check_category(description)
@@ -104,7 +109,7 @@ module GeeklistWS
             description[:url] = "http://www.boardgamegeek.com/boardgame/#{game[:id]}"
             description[:image] = "http://cf.geekdo-images.com/images/pic#{game[:imageid]}_t.jpg"
             description[:title] = game[:title]
-            stripped_body = game[:body].gsub(/\[\/?[^\]]+\]/, '')
+            stripped_body = game[:body].nil? ? "" : game[:body].gsub(/\[\/?[^\]]+\]/, '')
             if stripped_body.length > 75
                 description[:short] = "#{stripped_body[0..75]}..."
             else

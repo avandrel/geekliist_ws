@@ -1,0 +1,19 @@
+current_id: 187035
+names:
+  178608: "Mathtrade 19"
+  180671: "Mathtrade 19.5"
+  185291: "Mathtrade 20"
+  187035: "Mathtrade 20.5"
+  178867: "Mathtrade testlist"
+results:
+  #178608: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Wyniki.txt"
+  #180671: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319,5%20-%20Wyniki.txt"
+  185291: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2320%20-%20Wyniki.txt"
+lists:
+  #178608: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Listy.txt"
+  #180671: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319,5%20-%20Listy.txt"
+  185291: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2320%20-%20Listy.txt"
+url:
+  development: "http://localhost:9292/"
+  test: "http://localhost:9292/"
+  production: "http://mathtrade.mgpm.pl/"

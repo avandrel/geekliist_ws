@@ -3,9 +3,9 @@
     %div{:class => "btn-group"}
       - if !@converter.user.nil?
         %input{:type => "hidden", :name => "bgguser", :value => "#{@converter.user}" }
-      %button{:formaction => "http://mathtrade.mgpm.pl/list", :type => "submit", :class => "btn btn-default", :style=> "font-size:11px;"}All
+      %button{:formaction => "#{@converter.url}list", :type => "submit", :class => "btn btn-default", :style=> "font-size:11px;"}All
       - @converter.subdomains.each do |key, value|
         - if @converter.category == key.to_s
           %button{:type => "submit", :class => "btn btn-info disabled", :style=> "font-size:11px;"}= "#{value[:sub_name]}"
         - else
-          %button{:formaction => "http://mathtrade.mgpm.pl/list/#{key}", :type => "submit", :class => "btn btn-info", :style=> "font-size:11px;"}= value[:sub_name]
+          %button{:formaction => "#{@converter.url}list?button=#{key}", :type => "submit", :class => "btn btn-info", :style=> "font-size:11px;"}= value[:sub_name]

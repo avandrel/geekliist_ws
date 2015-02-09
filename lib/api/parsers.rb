@@ -13,7 +13,7 @@ module GeeklistWS
             game[:imageid] = item.attribute('imageid').value
             game[:itemid] = item.attribute('id').value
     		game[:number] = number
-            game[:body] = item.children[0].text
+            game[:body] = item.children[0].text unless item.children[0].nil?
             game[:children] = []
             item.children.each do |child|
                 if  child.name == "comment"

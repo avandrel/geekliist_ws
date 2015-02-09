@@ -13,7 +13,7 @@ module GeeklistWS
 	  			puts "List from cache"
 	  			list = list_repository.get_list(id)
 	  		else
-	  			puts "List from BGG"
+	  			puts "List from BGG => http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1"
 	  			list = open("http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1").read
 	  			list_repository.add_list(id, list)
 	  		end
@@ -28,7 +28,13 @@ module GeeklistWS
 	  	end
 
 	  	def self.read_game(game)
-	  		doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{game[:id]}?stats=1"))
+	  		begin
+	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{game[:id]}?stats=1"))
+	  		rescue
+	  			sleep(3)
+	  			puts "Retrying..."
+	  			retry
+	  		end
 	  		ratings = doc.xpath("//boardgames/boardgame/statistics/ratings")
 	  		game.merge(Parsers.parse_rating(ratings))
 	  	end

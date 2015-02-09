@@ -5,8 +5,7 @@
       %textarea{:class => "form-control", :rows => "5", :name => "list", :wrap => "soft"}
         - if @converter != nil
           = @converter.original_list
-      %button{:formmethod => "post", :formaction => "http://mathtrade.mgpm.pl/checklist", :type => "submit", :class => "btn btn-info"} Wyślij
-      //%button{:formmethod => "post", :formaction => "http://localhost:9292/checklist", :type => "submit", :class => "btn btn-info"} Wyślij
+      %button{:formmethod => "post", :formaction => "#{@url}checklist", :type => "submit", :class => "btn btn-info"} Wyślij
   - if @converter != nil
     %p
       %strong{:style => "color: red"} W Twojej liście znajdują się błędy:

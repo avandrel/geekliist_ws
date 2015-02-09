@@ -1,49 +1,58 @@
 require 'sinatra/base'
 require 'sinatra/json'
+require 'sinatra/config_file'
 require 'haml'
 
 # This is a rack app.
 module GeeklistWS
   module Frontend	
 	  class Web < Sinatra::Base
+      register Sinatra::ConfigFile
       helpers Sinatra::JSON
 
-      configure do
-        #set :id, '178608' - mathtrade 19
-        #set :id, '180671' # mathtrade 19.5
-        #set :id, '185291' # mathtrade 20
-        #set :id, '178867' #testlist
-        set :id, '187035' #mathtrade 20,5
-        
-        set :results, { 178608 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Wyniki.txt",
-                        180671 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319,5%20-%20Wyniki.txt",
-                        185291 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2320%20-%20Wyniki.txt"
-                      }
-        set :lists, { 178608 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Listy.txt",
-                        180671 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319,5%20-%20Listy.txt",
-                        185291 => "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2320%20-%20Listy.txt"
-                      }
-      end
+      root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+      config_file File.join( [root, 'config.yml'] )
 
       get "/" do 
-        redirect '/list'
+        haml :index
       end
 
-      get "/list*" do
-        puts "Method: GET, User: #{params[:bgguser]}"
-        data = GeeklistWS::API::Internal.get_geeklist(settings.id)
-        #data = GeeklistWS::API::Internal.get_geeklist("178867")
-        @converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1], params[:bgguser]
+      get "/list" do
+        puts "Method: GET, User: #{params[:bgguser]} Button: #{params[:button]}"
+        data = GeeklistWS::API::Internal.get_geeklist(settings.current_id.to_s)
+        @converter = GeeklistWS::Frontend::ListConverter.new data, params[:button], params[:bgguser], settings.url
 
         haml :listview
+      end
+
+      post "/list" do
+        puts "Method: POST, ID: #{params[:id]} User: #{params[:bgguser]}"
+        data = GeeklistWS::API::Internal.get_geeklist(params[:id].to_s)
+        @converter = GeeklistWS::Frontend::ListConverter.new data, params[:button], params[:bgguser], settings.url
+
+        haml :listview
+      end
+
+      get "/results" do
+        puts "Get"
+        data = GeeklistWS::API::Internal.get_resultlist(settings.current_id, settings.results[settings.current_id])
+        @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
+
+        haml :resultsview
+      end
+
+      post "/results" do
+        puts "Method: POST, ID: #{params[:id]}"
+        data = GeeklistWS::API::Internal.get_resultlist(params[:id], settings.results[params[:id].to_i])
+        @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
+
+        haml :resultsview
       end
 
       get "/stats*" do
         puts "Get"
         @data = GeeklistWS::API::Internal.get_stats(185291)
 
-        #data = GeeklistWS::API::Internal.get_geeklist("178867")
-        #@converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
 
         haml :jsonview
       end
@@ -52,9 +61,6 @@ module GeeklistWS
         puts "Get"
         @data = GeeklistWS::API::Internal.get_resultlist(185291, settings.results[185291])
 
-        #data = GeeklistWS::API::Internal.get_geeklist("178867")
-        #@converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
-
         json @data.to_json
       end
 
@@ -62,8 +68,6 @@ module GeeklistWS
         puts "Get"
         @data = GeeklistWS::API::Internal.get_wantlist(185291, settings.lists[185291])
 
-        #data = GeeklistWS::API::Internal.get_geeklist("178867")
-        #@converter = GeeklistWS::Frontend::ListConverter.new data, params[:splat][0][1..-1]
 
         json @data.to_json
       end
@@ -71,23 +75,23 @@ module GeeklistWS
       get "/results*" do
         puts "Get"
         data = GeeklistWS::API::Internal.get_resultlist(185291, settings.results[185291])
-        #data = GeeklistWS::API::Internal.get_geeklist("178867")
-        @converter = GeeklistWS::Frontend::ResultsConverter.new data
+        @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
 
         haml :resultsview
       end
 
       get "/checklist" do
         @post = false
+        @url = settings.url
         haml :checklistview
       end
 
       post "/checklist" do
           puts "checklist"
           @post = true
-          data = GeeklistWS::API::Internal.get_checklist(params["list"], settings.id)
-          #puts data.inspect
-          @converter = GeeklistWS::Frontend::CheckListConverter.new data
+          @url = settings.url
+          data = GeeklistWS::API::Internal.get_checklist(params["list"], settings.current_id)
+          @converter = GeeklistWS::Frontend::CheckListConverter.new data, settings.url
           haml :checklistview
       end
 

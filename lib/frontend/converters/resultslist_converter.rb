@@ -3,10 +3,11 @@
 module GeeklistWS
   module Frontend
     class ResultsConverter
-    	def initialize(response)
+    	def initialize(response, url)
     		@id = response[:id]
             @games = response[:games]
 			@exchanges = create_exchanges(response[:items])
+            @url = url
     	end
 
 		def id
