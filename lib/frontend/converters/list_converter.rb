@@ -39,7 +39,7 @@ module GeeklistWS
         def url
             @url
         end
-        
+
     	def headers
     		["Id","Title", "Poster", "Average Rating", "Overall Rank"]
     	end

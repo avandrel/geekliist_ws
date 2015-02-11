@@ -16,14 +16,14 @@ module GeeklistWS
 			aliases = []
 			@list.each do |element|
 				is_added = false
-				element_array = element.scan(/[(](.*)[)] ([0-9]*) : (.*)/)
+				element_array = element.scan(/[(](.*)[)] ([0-9]*) ?:\s?(.*)/)
 				unless element_array.empty? 
 					exchange_hash = { :poster => element_array[0][0], :from => element_array[0][1], :to => element_array[0][2]} 
 					exchanges << exchange_hash
 					is_added = true
 				end
 
-				alias_array = element.scan(/[(].*[)] (%.*) : (.*)/)
+				alias_array = element.scan(/[(].*[)] (%[^ ]*) ?:\s?(.*)/)
 				unless alias_array.empty?
 					alias_hash = {:id => alias_array[0][0], :elements => alias_array[0][1]} 
 					aliases << alias_hash
@@ -59,10 +59,11 @@ module GeeklistWS
 				end
 				exchanges_to_delete = []
 				exchanges.select { |ex| ex[:to].include?("%") }.each do |ex|
-					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]*)/).each do |a|
+					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]+)/).each do |a|
 						if @alias_collection.has_key?(a[0])
 							ex[:to][a[0]] = @alias_collection[a[0]]
 						else
+							puts @alias_collection.inspect
 							exchanges_to_delete << ex
 							@errors[:missing_alias] << a[0]
 						end
