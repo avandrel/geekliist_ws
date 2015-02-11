@@ -40,7 +40,13 @@ module GeeklistWS
 	  	end
 
 	  	def self.read_child(id)
-	  		doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{id}?stats=1"))
+	  		begin
+	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{id}?stats=1"))
+	  		rescue
+	  			sleep(3)
+	  			puts "Retrying..."
+	  			retry
+	  		end
 	  		child ||= {}
 	  		child[:id] = id
 	  		child[:title] = doc.xpath('//boardgames/boardgame/name[@primary]')[0].text
@@ -49,12 +55,24 @@ module GeeklistWS
 	  	end
 
 	  	def self.read_poster(name)
-	  		doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}")))
+	  		begin
+	  			doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}")))
+	  		rescue
+	  			sleep(3)
+	  			puts "Retrying..."
+	  			retry
+	  		end
 	  		doc.at_xpath("//avatarlink").attribute('value').value
 	  	end
 
 	  	def self.read_posters_collection(name)
-	  		doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi/collection/#{name}")))
+	  		begin
+	  			doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi/collection/#{name}")))
+	  		rescue
+	  			sleep(3)
+	  			puts "Retrying..."
+	  			retry
+	  		end
 	  		if doc.xpath("//message").empty?
 	  			collection ||= {}
 	  			doc.xpath("//item").each do |item|
