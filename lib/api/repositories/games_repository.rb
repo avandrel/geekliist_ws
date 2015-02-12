@@ -10,7 +10,7 @@ module GeeklistWS
             connector.games_collection.find().each do |game|
                 game.delete("_id")
                 symbolize_keys(game)
-                @all_collection[game[:id]] = game
+                @all_collection[game[:itemid]] = game
             end
             @all_collection
     	end

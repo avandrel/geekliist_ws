@@ -18,8 +18,10 @@ module GeeklistWS
             @database_count = 0
             @bgg_count = 0
             posters = []
+            i = 0
     		@geeklist[:games].each do |game|
     			print_and_flush(".")
+                print_and_flush("|") if i % 100 == 0
                 readed_game = get_game(game)
                 readed_game[:number] = game[:number]
                 readed_game[:poster] = game[:poster]
@@ -37,6 +39,7 @@ module GeeklistWS
                     end                    
                 end
                 response[:games] << readed_game #unless readed_game[:title] == "Unidentified Game"
+                i = i + 1
     		end
             
             puts "\nFinished. Cached: #{@database_count}, Online: #{@bgg_count}"
@@ -85,10 +88,10 @@ module GeeklistWS
       end
 
       def get_game(game)
-        if @games_repository.game_in_repo?(game[:id])
+        if @games_repository.game_in_repo?(game[:itemid])
             #puts "Reading from repo #{game[:id]}"
             @database_count = @database_count + 1
-            readed_game = @games_repository.get_game(game[:id])
+            readed_game = @games_repository.get_game(game[:itemid])
         else
             #puts "Reading from BGG #{game[:id]}"
             @bgg_count = @bgg_count + 1
