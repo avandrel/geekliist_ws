@@ -2,7 +2,6 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/config_file'
 require 'haml'
-require 'rack/cache'
 
 # This is a rack app.
 module GeeklistWS
@@ -10,13 +9,11 @@ module GeeklistWS
 	  class Web < Sinatra::Base
       register Sinatra::ConfigFile
       helpers Sinatra::JSON
-      use Rack::Cache
 
       root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
       config_file File.join( [root, 'config.yml'] )
 
       get "/" do 
-        cache_control :public, :max_age => 36000
         haml :index
       end
 
@@ -44,7 +41,6 @@ module GeeklistWS
       end
 
       get "/results" do
-        cache_control :public, :max_age => 36000
         puts "Method: GET, ID: #{params[:id]}"
         data = GeeklistWS::API::Internal.get_resultlist(params[:id], settings.results[params[:id].to_i])
         @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
@@ -53,7 +49,6 @@ module GeeklistWS
       end
 
       get "/nottraded" do
-        cache_control :public, :max_age => 36000
         puts "Method: GET, ID: #{params[:id]}"
         nottradedlist = GeeklistWS::API::Internal.get_nottradedlist(params[:id], settings.results[params[:id].to_i])
         wantlist = GeeklistWS::API::Internal.get_wantlist(params[:id], settings.lists[params[:id].to_i], nottradedlist[:games])

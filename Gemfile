@@ -1,7 +1,6 @@
 source 'http://rubygems.org'
 
 gem 'rack'
-gem 'rack-cache'
 gem 'grape'
 gem 'sinatra'
 gem 'sinatra-contrib'

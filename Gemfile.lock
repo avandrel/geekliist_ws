@@ -74,8 +74,6 @@ GEM
     rack (1.5.2)
     rack-accept (0.4.5)
       rack (>= 0.4)
-    rack-cache (1.2)
-      rack (>= 0.4)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
     rack-protection (1.5.3)
@@ -137,7 +135,6 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri
   rack
-  rack-cache
   rspec
   simple_form
   sinatra

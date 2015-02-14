@@ -6,7 +6,9 @@
     %link{:href => "/css/style.css", :rel => "stylesheet"}/    
   %body
     %div{:style => "margin-left:auto;margin-right:auto;margin-top:20px;width: 960px"}
-      %input{:type => "text", :id => "bggname", :onchange => "setAttr()"}
+      %p 
+        = "Użytkownik BGG:"
+        %input{:type => "text", :id => "bggname", :onchange => "setAttr()"}
       = haml :_mh_buttons, :locals => { :id => 178608, :config => settings}
       = haml :_mh_buttons, :locals => { :id => 180671, :config => settings}
       = haml :_mh_buttons, :locals => { :id => 185291, :config => settings}
