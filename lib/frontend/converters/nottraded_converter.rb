@@ -56,7 +56,7 @@ module GeeklistWS
                 want_from_list[:to].each do |to_element|
                     if to_element.include?(want[:from].to_s)
                         want_from_list[:desc] = {}
-                        want_from_list[:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[want_from_list[:from].to_s]}#item#{@games[want_from_list[:from].to_s][:id]}"
+                        want_from_list[:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[want_from_list[:from].to_s][:id]}#item#{@games[want_from_list[:from].to_s][:id]}"
                         want_from_list[:desc][:image] = "http://cf.geekdo-images.com/images/pic#{@games[want_from_list[:from].to_s][:imageid]}_t.jpg"
                         want_from_list[:desc][:title] = @games[want_from_list[:from].to_s][:title]
                         want_from_list[:desc][:number] = want_from_list[:from].to_s
