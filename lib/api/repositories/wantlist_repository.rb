@@ -9,11 +9,11 @@ module GeeklistWS
     	end
 
     	def wantlist_in_repo?(id)
-            @wantlist_collection.find_one({:id => "#{id}"}) != nil
+            @wantlist_collection.find_one({:id => id.to_i}) != nil
     	end
 
     	def get_wantlist(id)
-    		result = @wantlist_collection.find_one({:id => id})
+    		result = @wantlist_collection.find_one({:id => id.to_i})
             result.delete("_id")
             symbolize_keys(result)
             result

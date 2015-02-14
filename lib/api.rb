@@ -43,13 +43,24 @@ module GeeklistWS
         puts "Geeklist loaded"
         games_finder = GeeklistWS::API::GamesFinder.new geeklist
         
-        resultlist = GeeklistWS::API::Readers.read_results id, url
+        resultlist = GeeklistWS::API::Readers.read_results id, url, true
         resultlist[:games] = games_finder.find_some_games resultlist[:games]
         resultlist
       end
 
-      def self.get_wantlist(id, url)
-        resultlist = GeeklistWS::API::Readers.read_wantlist id, url
+      def self.get_nottradedlist(id, url)
+        puts "Start reading geeklist"
+        geeklist = GeeklistWS::API::Readers.read_geeklist(id)
+        puts "Geeklist loaded"
+        games_finder = GeeklistWS::API::GamesFinder.new geeklist
+        
+        resultlist = GeeklistWS::API::Readers.read_results id, url, false
+        resultlist[:games] = games_finder.find_some_games resultlist[:games]
+        resultlist
+      end
+
+      def self.get_wantlist(id, url, games)
+        resultlist = GeeklistWS::API::Readers.read_wantlist id, url, games
         resultlist
       end
 
@@ -88,11 +99,12 @@ module GeeklistWS
 
         def wantlist_collection
             connect["wantlists"]
+        end
 
         def bggusers_collection
             connect["bggusers"]
         end
-end
+
     end
   end
 end

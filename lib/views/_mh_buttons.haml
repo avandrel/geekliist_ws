@@ -11,3 +11,7 @@
       %button{:formmethod => "post", :formaction => "#{@config.url}results", :type => "submit", :class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Wyniki\n#{@config.names[@id]}"
     - else
       %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Wyniki\n#{@config.names[@id]}"
+    - if @id != @config.current_id && !@config.results[@id].nil?
+      %button{:formmethod => "post", :formaction => "#{@config.url}nottraded", :type => "submit", :class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Niewymienione\n#{@config.names[@id]}"
+    - else
+      %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Niewymienione\n#{@config.names[@id]}"

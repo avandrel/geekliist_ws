@@ -49,9 +49,26 @@ module GeeklistWS
         haml :resultsview
       end
 
+      get "/nottraded" do
+        puts "Get"
+        data = GeeklistWS::API::Internal.get_nottradedlist(settings.current_id, settings.results[settings.current_id])
+        @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
+
+        haml :nottradedview
+      end
+
+      post "/nottraded" do
+        puts "Method: POST, ID: #{params[:id]}"
+        nottradedlist = GeeklistWS::API::Internal.get_nottradedlist(params[:id], settings.results[params[:id].to_i])
+        wantlist = GeeklistWS::API::Internal.get_wantlist(params[:id], settings.lists[params[:id].to_i], nottradedlist[:games])
+        @converter = GeeklistWS::Frontend::NotTradedConverter.new nottradedlist, wantlist, settings.url
+
+        haml :nottradedview
+      end
+
       get "/stats*" do
         puts "Get"
-        @data = GeeklistWS::API::Internal.get_stats(185291)
+        @data = GeeklistWS::API::Internal.get_stats(settings.current_id)
 
 
         haml :jsonview
@@ -59,14 +76,14 @@ module GeeklistWS
 
       get "/json_results*" do
         puts "Get"
-        @data = GeeklistWS::API::Internal.get_resultlist(185291, settings.results[185291])
+        @data = GeeklistWS::API::Internal.get_resultlist(settings.current_id, settings.results[settings.current_id])
 
         json @data.to_json
       end
 
       get "/json_lists*" do
         puts "Get"
-        @data = GeeklistWS::API::Internal.get_wantlist(185291, settings.lists[185291])
+        @data = GeeklistWS::API::Internal.get_wantlist(settings.current_id, settings.lists[settings.current_id], nil)
 
 
         json @data.to_json
@@ -74,7 +91,7 @@ module GeeklistWS
 
       get "/results*" do
         puts "Get"
-        data = GeeklistWS::API::Internal.get_resultlist(185291, settings.results[185291])
+        data = GeeklistWS::API::Internal.get_resultlist(settings.last_id, settings.results[settings.last_id])
         @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
 
         haml :resultsview

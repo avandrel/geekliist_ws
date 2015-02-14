@@ -1,0 +1,25 @@
+%div{:style => "margin-left:auto;margin-right:auto;width: 960px"} 
+  %table{:id => "mytable", :class => "table table-bordered"}
+    %thead
+    %tbody
+      - @converter.lefts.each do |item|
+        %tr
+          %td{:class => "text-center"}
+            %div{:class => "float", :style => "position: relative"}
+              = "#{item[:item][:user_id]}"
+              %a{:href => item[:item][:desc][:url]}
+                %div{:class => "row"}
+                  %img{:src => item[:item][:desc][:image], :style => "vertical-align:middle; width:80px; height:80px; margin:0 auto", :class => "thumbnail"}
+                %div{:class => "row"}
+                  = "#{item[:item][:desc][:title]} (#{item[:item][:desc][:number]})"
+          %td{:style => "vertical-align: middle", :class => "text-center"}
+            - @converter.wants[item[:item][:desc][:number]].each_slice(6) do |slice|
+              %div{:class => "row"}
+                - slice.each do |it|
+                  %div{:class => "col-md-2"}
+                    = "#{it[:poster]}"
+                    %a{:href => it[:desc][:url]}
+                      %div{:class => "row"}
+                        %img{:src => it[:desc][:image], :style => "vertical-align:middle; width:80px; height:80px; margin:0 auto", :class => "thumbnail"}
+                      %div{:class => "row"}
+                        = "#{it[:desc][:title]} (#{it[:desc][:number]})"

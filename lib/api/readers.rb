@@ -91,37 +91,43 @@ module GeeklistWS
 	  		collection
 	  	end
 	  		
-	  	def self.read_results(id, url)
+	  	def self.read_results(id, url, gettraded)
 	  		results_repository = ResultsRepository.new
 	  		if results_repository.result_in_repo?(id)
 	  			result = results_repository.get_result(id)
 	  			result
 	  		else
 		  		file = open(url)
-		  		trades = []
+		  		trades = { :traded => [], :nottraded => [] }
 		  		games = []
 		  		file.readlines.each do |line|
 					scaned_line = line.scan(/[(](.+)[)]\s(\d+)\s+receives\s[(](.+)[)]\s+(\d+)\s+and sends to\s[(](.+)[)]\s+(\d+)/)
-					unless scaned_line.empty? 
-						trades << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] }, 
+					if !scaned_line.empty? && gettraded
+						trades[:traded] << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] }, 
 											:receives => { :user_id => scaned_line[0][2], :game_id => scaned_line[0][3] },
 											:sends => { :user_id => scaned_line[0][4], :game_id => scaned_line[0][5] }
 										}
 						games << scaned_line[0][1] unless games.include?(scaned_line[0][1])
 					end
 					scaned_line = line.scan(/[(](.+)[)]\s(\d+)\s+does not trade/)
-					unless scaned_line.empty?
-						trades << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] } }			
+					if !scaned_line.empty? && !gettraded
+						trades[:nottraded] << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] } }	
+						games << scaned_line[0][1] unless games.include?(scaned_line[0][1])		
 					end
 				end
-				{ :id => id, :items => trades, :games => games}
+				{ :id => id, :items => trades[:traded], :nottraded => trades[:nottraded], :games => games}
 			end
 	  	end
 
-	  	def self.read_wantlist(id, url)
+	  	def self.read_wantlist(id, url, games)
+	  		puts "Reading wantlist"
 			wantlist_repository = WantlistRepository.new
 	  		if wantlist_repository.wantlist_in_repo?(id)
 	  			result = wantlist_repository.get_wantlist(id)
+	  			unless games.nil?
+					result[:wantlist].delete_if {|list| 
+						!games.include?(list[:from].to_s) }
+				end
 	  			result
 	  		else
 		  		file = open(url)
@@ -144,11 +150,10 @@ module GeeklistWS
 					end
 		  		end
 		  		puts "List readed"
-			@alias_collection = prepare_aliases(aliases)
-			#puts aliases.inspect
-			#puts @alias_collection.inspect
-			@wantlist_collection = prepare_wantlist(wants)
-			#puts @exchange_collection.inspect
+				@alias_collection = prepare_aliases(aliases)
+				#puts aliases.inspect
+				#puts @alias_collection.inspect
+				@wantlist_collection = prepare_wantlist(wants)
 			end
 
 	  	end
