@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'sinatra/config_file'
 require 'haml'
+require 'rack/cache'
 
 # This is a rack app.
 module GeeklistWS
@@ -9,40 +10,42 @@ module GeeklistWS
 	  class Web < Sinatra::Base
       register Sinatra::ConfigFile
       helpers Sinatra::JSON
+      use Rack::Cache
 
       root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
       config_file File.join( [root, 'config.yml'] )
 
       get "/" do 
+        cache_control :public, :max_age => 36000
         haml :index
       end
 
       get "/list" do
         puts "Method: GET, User: #{params[:bgguser]} Button: #{params[:button]}"
-        data = GeeklistWS::API::Internal.get_geeklist(settings.current_id.to_s)
-        @converter = GeeklistWS::Frontend::ListConverter.new data, params[:button], params[:bgguser], settings.url
-
-        haml :listview
-      end
-
-      post "/list" do
-        puts "Method: POST, ID: #{params[:id]} User: #{params[:bgguser]}"
         data = GeeklistWS::API::Internal.get_geeklist(params[:id].to_s)
         @converter = GeeklistWS::Frontend::ListConverter.new data, params[:button], params[:bgguser], settings.url
 
         haml :listview
       end
 
-      get "/results" do
-        puts "Get"
-        data = GeeklistWS::API::Internal.get_resultlist(settings.current_id, settings.results[settings.current_id])
-        @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
-
-        haml :resultsview
+      get "/checklist" do
+        @post = false
+        @url = settings.url
+        haml :checklistview
       end
 
-      post "/results" do
-        puts "Method: POST, ID: #{params[:id]}"
+      post "/checklist" do
+          puts "checklist"
+          @post = true
+          @url = settings.url
+          data = GeeklistWS::API::Internal.get_checklist(params["list"], settings.current_id)
+          @converter = GeeklistWS::Frontend::CheckListConverter.new data, settings.url
+          haml :checklistview
+      end
+
+      get "/results" do
+        cache_control :public, :max_age => 36000
+        puts "Method: GET, ID: #{params[:id]}"
         data = GeeklistWS::API::Internal.get_resultlist(params[:id], settings.results[params[:id].to_i])
         @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
 
@@ -50,18 +53,11 @@ module GeeklistWS
       end
 
       get "/nottraded" do
-        puts "Get"
-        data = GeeklistWS::API::Internal.get_nottradedlist(settings.current_id, settings.results[settings.current_id])
-        @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
-
-        haml :nottradedview
-      end
-
-      post "/nottraded" do
-        puts "Method: POST, ID: #{params[:id]}"
+        cache_control :public, :max_age => 36000
+        puts "Method: GET, ID: #{params[:id]}"
         nottradedlist = GeeklistWS::API::Internal.get_nottradedlist(params[:id], settings.results[params[:id].to_i])
         wantlist = GeeklistWS::API::Internal.get_wantlist(params[:id], settings.lists[params[:id].to_i], nottradedlist[:games])
-        @converter = GeeklistWS::Frontend::NotTradedConverter.new nottradedlist, wantlist, settings.url
+        @converter = GeeklistWS::Frontend::NotTradedConverter.new nottradedlist, wantlist, settings.url, params[:name]
 
         haml :nottradedview
       end
@@ -95,21 +91,6 @@ module GeeklistWS
         @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
 
         haml :resultsview
-      end
-
-      get "/checklist" do
-        @post = false
-        @url = settings.url
-        haml :checklistview
-      end
-
-      post "/checklist" do
-          puts "checklist"
-          @post = true
-          @url = settings.url
-          data = GeeklistWS::API::Internal.get_checklist(params["list"], settings.current_id)
-          @converter = GeeklistWS::Frontend::CheckListConverter.new data, settings.url
-          haml :checklistview
       end
 
       error do

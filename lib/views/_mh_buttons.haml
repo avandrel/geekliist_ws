@@ -1,17 +1,20 @@
 - @id = locals[:id]
 - @config = locals[:config]
-%form
-  %input{:type => "hidden", :name => "id", :value => "#{@id}" }
-    %button{:formmethod => "post", :formaction => "#{@config.url}list", :type => "submit", :class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Geeklista\n#{@config.names[@id]}"
-    - if @id != @config.current_id
-      %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Sprawdzarka\n#{@config.names[@id]}"
-    - else
-      %button{:formaction => "#{@config.url}checklist", :type => "submit", :class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Sprawdzarka\n#{@config.names[@id]}"
-    - if @id != @config.current_id && !@config.results[@id].nil?
-      %button{:formmethod => "post", :formaction => "#{@config.url}results", :type => "submit", :class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Wyniki\n#{@config.names[@id]}"
-    - else
-      %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Wyniki\n#{@config.names[@id]}"
-    - if @id != @config.current_id && !@config.results[@id].nil?
-      %button{:formmethod => "post", :formaction => "#{@config.url}nottraded", :type => "submit", :class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Niewymienione\n#{@config.names[@id]}"
-    - else
-      %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Niewymienione\n#{@config.names[@id]}"
+%div
+  %a{:href => "#{@config.url}list?id=#{@id}"}
+    %button{:class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Geeklista\n#{@config.names[@id]}"
+  - if @id != @config.current_id
+    %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Sprawdzarka\n#{@config.names[@id]}"
+  - else
+    %a{:href => "#{@config.url}checklist?id=#{@id}"}
+      %button{:class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Sprawdzarka\n#{@config.names[@id]}"
+  - if @id != @config.current_id && !@config.results[@id].nil?
+    %a{:href => "#{@config.url}results?id=#{@id}"}
+      %button{:class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Wyniki\n#{@config.names[@id]}"
+  - else
+    %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Wyniki\n#{@config.names[@id]}"
+  - if @id != @config.current_id && !@config.results[@id].nil?
+    %a{:id => "url", :href => "#{@config.url}nottraded?id=#{@id}"}
+      %button{:class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Niewymienione\n#{@config.names[@id]}"
+  - else
+    %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Niewymienione\n#{@config.names[@id]}"

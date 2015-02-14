@@ -82,7 +82,7 @@ module GeeklistWS
         readed_games = {}
         games.each do |game|
             readed_game = games_repository.get_game(@geeklist[:games].find{ |list_game| list_game[:number] == game.to_i }[:itemid])
-            readed_games[game] = { :id => readed_game[:id], :title => readed_game[:title], :imageid => readed_game[:imageid] }
+            readed_games[game] = { :id => readed_game[:id], :title => readed_game[:title], :imageid => readed_game[:imageid], :itemid => readed_game[:itemid]}
         end
         readed_games
       end

@@ -3,11 +3,11 @@
 module GeeklistWS
   module Frontend
     class NotTradedConverter
-    	def initialize(results, wantlist, url)
+    	def initialize(results, wantlist, url, bgguser)
     		@id = results[:id]
             @games = results[:games]
             @wants = convert_wants(wantlist[:wantlist])
-			@results = create_lefts(results[:nottraded])
+			@results = create_lefts(results[:nottraded], bgguser)
             @url = url
     	end
 
@@ -27,16 +27,17 @@ module GeeklistWS
     		["Got", "For"]
     	end
 
-        def create_lefts nottraded
+        def create_lefts nottraded, bgguser
         	result = { :nottraded => [] }
             nottraded.each do |current_item|
                 current_item[:item][:desc] = {}
-                current_item[:item][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:item][:game_id]][:id]}#item#{@games[current_item[:item][:game_id]][:id]}"
+                current_item[:item][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:item][:game_id]][:itemid]}#item#{@games[current_item[:item][:game_id]][:itemid]}"
                 current_item[:item][:desc][:image] = "http://cf.geekdo-images.com/images/pic#{@games[current_item[:item][:game_id]][:imageid]}_t.jpg"
                 current_item[:item][:desc][:title] = @games[current_item[:item][:game_id]][:title]
                 current_item[:item][:desc][:number] = current_item[:item][:game_id]
 
-                result[:nottraded] << current_item if @wants.has_key?(current_item[:item][:desc][:number])          
+                result[:nottraded] << current_item if (@wants.has_key?(current_item[:item][:desc][:number]) && bgguser.nil?) || 
+                    (@wants.has_key?(current_item[:item][:desc][:number]) && current_item[:item][:user_id] == bgguser.upcase)
             end
 
 	       	result
@@ -56,7 +57,7 @@ module GeeklistWS
                 want_from_list[:to].each do |to_element|
                     if to_element.include?(want[:from].to_s)
                         want_from_list[:desc] = {}
-                        want_from_list[:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[want_from_list[:from].to_s][:id]}#item#{@games[want_from_list[:from].to_s][:id]}"
+                        want_from_list[:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[want_from_list[:from].to_s][:itemid]}#item#{@games[want_from_list[:from].to_s][:itemid]}"
                         want_from_list[:desc][:image] = "http://cf.geekdo-images.com/images/pic#{@games[want_from_list[:from].to_s][:imageid]}_t.jpg"
                         want_from_list[:desc][:title] = @games[want_from_list[:from].to_s][:title]
                         want_from_list[:desc][:number] = want_from_list[:from].to_s
