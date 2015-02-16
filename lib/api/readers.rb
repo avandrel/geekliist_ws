@@ -102,16 +102,18 @@ module GeeklistWS
 		  		games = []
 		  		file.readlines.each do |line|
 					scaned_line = line.scan(/[(](.+)[)]\s(\d+)\s+receives\s[(](.+)[)]\s+(\d+)\s+and sends to\s[(](.+)[)]\s+(\d+)/)
-					if !scaned_line.empty? && gettraded
-						trades[:traded] << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] }, 
+					if !scaned_line.empty? 
+						games << scaned_line[0][1] unless games.include?(scaned_line[0][1])
+						if gettraded
+							trades[:traded] << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] }, 
 											:receives => { :user_id => scaned_line[0][2], :game_id => scaned_line[0][3] },
 											:sends => { :user_id => scaned_line[0][4], :game_id => scaned_line[0][5] }
 										}
-						games << scaned_line[0][1] unless games.include?(scaned_line[0][1])
+						end	
 					end
 					scaned_line = line.scan(/[(](.+)[)]\s(\d+)\s+does not trade/)
-					if !scaned_line.empty? && !gettraded
-						trades[:nottraded] << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] } }	
+					if !scaned_line.empty?
+						trades[:nottraded] << { :item => { :user_id => scaned_line[0][0], :game_id => scaned_line[0][1] } }
 						games << scaned_line[0][1] unless games.include?(scaned_line[0][1])		
 					end
 				end
@@ -122,20 +124,21 @@ module GeeklistWS
 	  	def self.read_wantlist(id, url, games)
 	  		puts "Reading wantlist"
 			wantlist_repository = WantlistRepository.new
-	  		if wantlist_repository.wantlist_in_repo?(id)
-	  			result = wantlist_repository.get_wantlist(id)
-	  			unless games.nil?
-					result[:wantlist].delete_if {|list| 
-						!games.include?(list[:from].to_s) }
-				end
-	  			result
-	  		else
+	  		#if wantlist_repository.wantlist_in_repo?(id)
+	  			#result = wantlist_repository.get_wantlist(id)
+	  			#puts result.inspect
+	  			#unless games.nil?
+					#result[:wantlist].delete_if {|list| 
+						#!games.include?(list[:from].to_s) }
+				#end
+	  			#result
+	  		#else
 		  		file = open(url)
 		  		wants = []
 				aliases = []
 		  		file.readlines.each do |line|
 		  			is_added = false
-					element_array = line.scan(/[(](.*)[)] ([0-9]*) : (.*)/)
+					element_array = line.scan(/[(](.*)[)] ([0-9]*)\s?: (.*)/)
 		  			unless element_array.empty? 
 						exchange_hash = { :poster => element_array[0][0], :from => element_array[0][1], :to => element_array[0][2]} 
 						wants << exchange_hash
@@ -154,7 +157,7 @@ module GeeklistWS
 				#puts aliases.inspect
 				#puts @alias_collection.inspect
 				@wantlist_collection = prepare_wantlist(wants)
-			end
+			#end
 
 	  	end
 
@@ -162,16 +165,16 @@ module GeeklistWS
 			wants_collection = []
 			while wants.count > 0
 				wants.delete_if { |wants|
-					wants_collection << {:poster => wants[:poster], :from => prepare(wants[:from]), :to => prepare(wants[:to])} if (!wants[:from].include?("%") && !wants[:to].include?("%"))
+					wants_collection << {:poster => wants[:poster], :from => wants[:from], :to => prepare(wants[:to])} if (!wants[:from].include?("%") && !wants[:to].include?("%"))
 				}
 				wants.select { |ex| ex[:from].include?("%") }.each do |ex|
-					ex[:from].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]*)/).each do |a|
+					ex[:from].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃńÉéÀàÄä_]*)/).each do |a|
 						ex[:from][a[0]] = @alias_collection[ex[:poster]][a[0]]
 					end
 				end
 				wants_to_delete = []
 				wants.select { |ex| ex[:to].include?("%") }.each do |ex|
-					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃń_]*)/).each do |a|
+					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃńÉéÀàÄä_]*)/).each do |a|
 						if @alias_collection[ex[:poster]].has_key?(a[0])
 							ex[:to][a[0]] = @alias_collection[ex[:poster]][a[0]]
 						else

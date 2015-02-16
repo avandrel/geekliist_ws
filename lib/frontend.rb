@@ -67,14 +67,14 @@ module GeeklistWS
 
       get "/json_results*" do
         puts "Get"
-        @data = GeeklistWS::API::Internal.get_resultlist(settings.current_id, settings.results[settings.current_id])
+        @data = GeeklistWS::API::Internal.get_resultlist(settings.last_id, settings.results[settings.last_id])
 
         json @data.to_json
       end
 
       get "/json_lists*" do
         puts "Get"
-        @data = GeeklistWS::API::Internal.get_wantlist(settings.current_id, settings.lists[settings.current_id], nil)
+        @data = GeeklistWS::API::Internal.get_wantlist(settings.last_id, settings.lists[settings.last_id], nil)
 
 
         json @data.to_json

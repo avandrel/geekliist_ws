@@ -6,7 +6,7 @@ module GeeklistWS
     	def initialize(results, wantlist, url, bgguser)
     		@id = results[:id]
             @games = results[:games]
-            @wants = convert_wants(wantlist[:wantlist])
+            @wants = convert_wants(wantlist)
 			@results = create_lefts(results[:nottraded], bgguser)
             @url = url
     	end
@@ -36,8 +36,10 @@ module GeeklistWS
                 current_item[:item][:desc][:title] = @games[current_item[:item][:game_id]][:title]
                 current_item[:item][:desc][:number] = current_item[:item][:game_id]
 
-                result[:nottraded] << current_item if (@wants.has_key?(current_item[:item][:desc][:number]) && bgguser.nil?) || 
+                if (@wants.has_key?(current_item[:item][:desc][:number]) && bgguser.nil?) || 
                     (@wants.has_key?(current_item[:item][:desc][:number]) && current_item[:item][:user_id] == bgguser.upcase)
+                    result[:nottraded] << current_item 
+                end
             end
 
 	       	result
