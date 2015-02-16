@@ -6,7 +6,7 @@ module GeeklistWS
     	def initialize(results, wantlist, url, bgguser)
     		@id = results[:id]
             @games = results[:games]
-            @wants = convert_wants(wantlist)
+            @wants = convert_wants(wantlist, results[:nottraded])
 			@results = create_lefts(results[:nottraded], bgguser)
             @url = url
     	end
@@ -45,19 +45,20 @@ module GeeklistWS
 	       	result
         end
 
-        def convert_wants wants
+        def convert_wants wants, nottraded
             result = {}
+            nottraded_collection = create_nottraded(nottraded)
             wants.each do |want|
-                result[want[:from].to_s] = find_in_want(want, wants)
+                result[want[:from].to_s] = find_in_want(want, wants, nottraded_collection)
             end
             result
         end
 
-        def find_in_want want, wants
+        def find_in_want want, wants, nottraded
             found = []
             wants.each do |want_from_list| 
                 want_from_list[:to].each do |to_element|
-                    if to_element.include?(want[:from].to_s)
+                    if to_element.include?(want[:from].to_s) && nottraded.include?(want_from_list[:from].to_s)
                         want_from_list[:desc] = {}
                         want_from_list[:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[want_from_list[:from].to_s][:itemid]}#item#{@games[want_from_list[:from].to_s][:itemid]}"
                         want_from_list[:desc][:image] = "http://cf.geekdo-images.com/images/pic#{@games[want_from_list[:from].to_s][:imageid]}_t.jpg"
@@ -68,6 +69,14 @@ module GeeklistWS
                 end
             end
             found
+        end
+
+        def create_nottraded(nottraded)
+            result = []
+            nottraded.each do |item|
+                result << item[:item][:game_id]
+            end
+            result
         end
     end
   end
