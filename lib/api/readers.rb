@@ -33,8 +33,8 @@ module GeeklistWS
 	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{game[:id]}?stats=1"))
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			puts "Retrying in 30 sec..."
-				sleep(30)
+	  			puts "Retrying in 50 sec..."
+				sleep(5)
 	  			retry
 	  		end
 	  		ratings = doc.xpath("//boardgames/boardgame/statistics/ratings")
@@ -47,8 +47,8 @@ module GeeklistWS
 	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{id}?stats=1"))
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			puts "Retrying in 30 sec..."
-				sleep(30)
+	  			puts "Retrying in 50 sec..."
+				sleep(5)
 	  			retry
 	  		end
 	  		child ||= {}
@@ -64,8 +64,8 @@ module GeeklistWS
 	  			doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}")))
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			puts "Retrying in 30 sec..."
-				sleep(30)
+	  			puts "Retrying in 50 sec..."
+				sleep(5)
 	  			retry
 	  		end
 	  		doc.at_xpath("//avatarlink").attribute('value').value
@@ -77,8 +77,8 @@ module GeeklistWS
 	  			doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi/collection/#{name}")))
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			puts "Retrying in 30 sec..."
-				sleep(30)
+	  			puts "Retrying in 50 sec..."
+				sleep(5)
 	  			retry
 	  		end
 	  		if doc.xpath("//message").empty?
