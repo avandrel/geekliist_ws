@@ -48,7 +48,7 @@ module GeeklistWS
     		prapared_games = []
     		@games.each do |game|
                 prepared_game = {
-    				:number => { :number => game[:number], :itemid => game[:itemid] },
+    				:number => { :number => game[:number], :itemid => game[:itemid], :id => game[:id] },
     				#:title => create_title(game[:id], game[:title], game[:imageid]),
                     #:title => game[:title],
                     #:url => "http://www.boardgamegeek.com/boardgame/#{game[:id]}",
@@ -60,6 +60,7 @@ module GeeklistWS
                     :collection => create_collection(game[:id]),
                     :actual => check_actual(game[:body])
     			}
+                prepared_game[:desc][:alias] = prepare_alias(prepared_game)
                 prapared_games << prepared_game if check_category(prepared_game[:desc])
     		end
     		prapared_games
@@ -131,6 +132,7 @@ module GeeklistWS
 
         def create_child(raw_child)
             child = {}
+            child[:id] = raw_child[:id]
             child[:url] = "http://www.boardgamegeek.com/boardgame/#{raw_child[:id]}"
             child[:image] = raw_child[:thumb_url]
             child[:title] = raw_child[:title]
@@ -159,6 +161,14 @@ module GeeklistWS
                 end
             end
             readed_user
+        end
+
+        def prepare_alias(game)
+            result = "%A#{game[:number][:id]}"
+            game[:desc][:children].each do |child|
+                result = "#{result}C#{child[:id]}"
+            end
+            result
         end
     end
   end

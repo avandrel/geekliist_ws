@@ -20,6 +20,9 @@
                   %h4
                     %a{:href => game[:desc][:url]}= game[:desc][:title]
                 %div{:style => "float:right;"}
+                  %h6
+                    %a{:href=> "#", :onclick => "setAttr('#{game[:desc][:alias]}'); return false"}= game[:desc][:alias]
+                %div{:style => "float:right;"}
                   - if !game[:collection].nil?
                     = haml :_collection, :locals => { :collection => game[:collection] }
               %div{:style => "clear:left;"}
