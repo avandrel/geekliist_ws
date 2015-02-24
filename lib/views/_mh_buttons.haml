@@ -14,7 +14,7 @@
   - else
     %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Wyniki\n#{@config.names[@id]}"
   - if @id != @config.current_id && !@config.results[@id].nil?
-    %a{:id => "url", :href => "#{@config.url}nottraded?id=#{@id}"}
+    %a{:class => "url", :href => "#{@config.url}nottraded?id=#{@id}"}
       %button{:class => "btn btn-info", :style=> "width:175px; height:30px;font-size:11px;"}= "Niewymienione\n#{@config.names[@id]}"
   - else
     %button{:type => "submit", :class => "btn btn-info disabled", :style=> "width:175px; height:30px;font-size:11px;"}= "Niewymienione\n#{@config.names[@id]}"

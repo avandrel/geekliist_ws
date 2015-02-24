@@ -49,7 +49,7 @@ module GeeklistWS
       end
 
       get "/nottraded" do
-        puts "Method: GET, ID: #{params[:id]}"
+        puts "Method: GET, User: #{params[:bgguser]}, ID: #{params[:id]}"
         nottradedlist = GeeklistWS::API::Internal.get_nottradedlist(params[:id], settings.results[params[:id].to_i])
         wantlist = GeeklistWS::API::Internal.get_wantlist(params[:id], settings.lists[params[:id].to_i], nottradedlist[:games])
         @converter = GeeklistWS::Frontend::NotTradedConverter.new nottradedlist, wantlist, settings.url, params[:name]

@@ -168,13 +168,13 @@ module GeeklistWS
 					wants_collection << {:poster => wants[:poster], :from => wants[:from], :to => prepare(wants[:to])} if (!wants[:from].include?("%") && !wants[:to].include?("%"))
 				}
 				wants.select { |ex| ex[:from].include?("%") }.each do |ex|
-					ex[:from].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃńÉéÀàÄä_]*)/).each do |a|
+					ex[:from].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃńÉéÀàÄäÜü_-]*)/).each do |a|
 						ex[:from][a[0]] = @alias_collection[ex[:poster]][a[0]]
 					end
 				end
 				wants_to_delete = []
 				wants.select { |ex| ex[:to].include?("%") }.each do |ex|
-					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃńÉéÀàÄä_]*)/).each do |a|
+					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃńÉéÀàÄäÜü_-]*)/).each do |a|
 						if @alias_collection[ex[:poster]].has_key?(a[0])
 							ex[:to][a[0]] = @alias_collection[ex[:poster]][a[0]]
 						else
