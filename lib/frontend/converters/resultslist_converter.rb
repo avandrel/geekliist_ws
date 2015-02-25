@@ -33,19 +33,19 @@ module GeeklistWS
                 break if current_item.nil?
                 while true
                     current_item[:item][:desc] = {}
-                    current_item[:item][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:item][:game_id]][:id]}#item#{@games[current_item[:item][:game_id]][:id]}"
+                    current_item[:item][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:item][:game_id]][:itemid]}#item#{@games[current_item[:item][:game_id]][:itemid]}"
                     current_item[:item][:desc][:image] = "http://cf.geekdo-images.com/images/pic#{@games[current_item[:item][:game_id]][:imageid]}_t.jpg"
                     current_item[:item][:desc][:title] = @games[current_item[:item][:game_id]][:title]
                     current_item[:item][:desc][:number] = current_item[:item][:game_id]
 
                     current_item[:receives][:desc] = {}
-                    current_item[:receives][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:receives][:game_id]][:id]}#item#{@games[current_item[:receives][:game_id]][:id]}"
+                    current_item[:receives][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:receives][:game_id]][:itemid]}#item#{@games[current_item[:receives][:game_id]][:itemid]}"
                     current_item[:receives][:desc][:image] = "http://cf.geekdo-images.com/images/pic#{@games[current_item[:receives][:game_id]][:imageid]}_t.jpg"
                     current_item[:receives][:desc][:title] = @games[current_item[:receives][:game_id]][:title]
                     current_item[:receives][:desc][:number] = current_item[:receives][:game_id]
 
                     current_item[:sends][:desc] = {}
-                    current_item[:sends][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:sends][:game_id]][:id]}#item#{@games[current_item[:sends][:game_id]][:id]}"
+                    current_item[:sends][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:sends][:game_id]][:itemid]}#item#{@games[current_item[:sends][:game_id]][:itemid]}"
                     current_item[:sends][:desc][:image] = "http://cf.geekdo-images.com/images/pic#{@games[current_item[:sends][:game_id]][:imageid]}_t.jpg"
                     current_item[:sends][:desc][:title] = @games[current_item[:sends][:game_id]][:title]
                     current_item[:sends][:desc][:number] = current_item[:sends][:game_id]
@@ -60,7 +60,7 @@ module GeeklistWS
 
             nottraded.each do |current_item|
                 current_item[:item][:desc] = {}
-                current_item[:item][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:item][:game_id]][:id]}#item#{@games[current_item[:item][:game_id]][:id]}"
+                current_item[:item][:desc][:url] = "http://www.boardgamegeek.com/geeklist/#{@id}/item/#{@games[current_item[:item][:game_id]][:itemid]}#item#{@games[current_item[:item][:game_id]][:itemid]}"
                 current_item[:item][:desc][:image] = "http://cf.geekdo-images.com/images/pic#{@games[current_item[:item][:game_id]][:imageid]}_t.jpg"
                 current_item[:item][:desc][:title] = @games[current_item[:item][:game_id]][:title]
                 current_item[:item][:desc][:number] = current_item[:item][:game_id]
