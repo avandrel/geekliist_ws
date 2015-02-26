@@ -24,7 +24,11 @@ module GeeklistWS
     		game.delete(:poster) unless game[:poster] == nil
             game.delete(:number) unless game[:number] == nil
             game[:created] = (DateTime.now + rand(3)).to_time.utc
-    		@games_collection.insert(game)
+            begin
+    		  @games_collection.insert(game)
+            rescue
+              return nil
+            end
             symbolize_keys(game)
             game.clone
     	end

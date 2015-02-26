@@ -33,7 +33,7 @@ module GeeklistWS
 	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{game[:id]}?stats=1"))
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			puts "Retrying in 50 sec..."
+	  			puts "Retrying in 5 sec..."
 				sleep(5)
 	  			retry
 	  		end
@@ -47,7 +47,7 @@ module GeeklistWS
 	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{id}?stats=1"))
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			puts "Retrying in 50 sec..."
+	  			puts "Retrying in 5 sec..."
 				sleep(5)
 	  			retry
 	  		end
