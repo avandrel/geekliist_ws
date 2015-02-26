@@ -38,7 +38,7 @@ module GeeklistWS
             games_finder.find_game(game)
             counter = counter + 1
             time = Time.now - start_time
-            break if time > 27
+            break if time > 25
         end
         "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s, Counter: #{counter}/#{geeklist[:games].count}"
       end
