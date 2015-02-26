@@ -26,6 +26,27 @@ module GeeklistWS
         response
       end
 
+      def self.get_partial_geeklist(id)
+        start_time = Time.now
+        geeklist = GeeklistWS::API::Readers.read_geeklist(id)
+        puts "Geeklist loaded: #{geeklist[:games].count}"
+        games_finder = GeeklistWS::API::GamesFinder.new geeklist
+
+        counter = 0
+
+        geeklist[:games].each do |game|
+            games_finder.find_game(game)
+            counter = counter + 1
+            time = Time.now - start_time
+            puts "#{counter}. #{time}"
+            break if time > 25
+        end
+        #response = games_finder.find_games
+        #response[:id] = id
+        "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s, Counter: #{counter}/#{geeklist[:games].count}"
+        #response
+      end
+
       def self.get_checklist(list, id)
         start_time = Time.now
         puts "Api - id: #{id}"

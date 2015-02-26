@@ -5,13 +5,15 @@ module GeeklistWS
     class GamesFinder
     	def initialize(geeklist)
     		@geeklist = geeklist
+            @games_repository = GamesRepository.new
+            @posters_repository = PostersRepository.new true
+            @children_repository = ChildrenRepository.new
+            @bgg_count = 0
+            @database_count = 0
     	end
 
     	def find_games
             puts "Init"
-    		@games_repository = GamesRepository.new
-            @posters_repository = PostersRepository.new true
-            @children_repository = ChildrenRepository.new
     		response = { :title => @geeklist[:title], :games => [], :posters => {} }
             puts "Init finished"            
     		puts "Reading #{@geeklist[:games].count}"
@@ -72,16 +74,38 @@ module GeeklistWS
     		response
     	end
 
+      def find_game(game)
+        unless @games_repository.game_in_repo?(game[:itemid])
+            readed_game = get_game(game)
+            if !game[:children].empty?
+                game[:children].each do |child|
+                    readed_child = get_child(child[:id])
+                end                    
+            end
+
+            unless @posters_repository.poster_in_repo?(game[:poster])
+                avatar = Readers.read_poster(game[:poster])
+                avatar = "http://mathtrade.mgpm.pl/img/meeple.png" unless avatar != "N/A"
+                @posters_repository.add_poster(game[:poster], avatar)
+            end
+        end
+      end
+
       def print_and_flush(str)
     		print str
     		$stdout.flush
   	  end
 
       def find_some_games(games)
-        games_repository = GamesRepository.new
         readed_games = {}
         games.each do |game|
-            readed_game = games_repository.get_game(@geeklist[:games].find{ |list_game| list_game[:number] == game.to_i }[:itemid])
+            game_id = @geeklist[:games].find{ |list_game| list_game[:number] == game.to_i }[:itemid]
+            unless @games_repository.game_in_repo?(game_id)
+                puts "Game (#{game})not in repo: #{game_id}"
+                readed_game = Readers.read_game({:id => game})
+                readed_game = @games_repository.add_game(readed_game)
+            end
+            readed_game = @games_repository.get_game(game_id)
             readed_games[game] = { :id => readed_game[:id], :title => readed_game[:title], :imageid => readed_game[:imageid], :itemid => readed_game[:itemid]}
         end
         readed_games

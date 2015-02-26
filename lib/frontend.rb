@@ -50,10 +50,14 @@ module GeeklistWS
 
       get "/nottraded" do
         puts "Method: GET, User: #{params[:bgguser]}, ID: #{params[:id]}"
+        start = Time.now
         nottradedlist = GeeklistWS::API::Internal.get_nottradedlist(params[:id], settings.results[params[:id].to_i])
+        nottradedlist_time = Time.now
         wantlist = GeeklistWS::API::Internal.get_wantlist(params[:id], settings.lists[params[:id].to_i], nottradedlist[:games])
+        wantlist_time = Time.now
         @converter = GeeklistWS::Frontend::NotTradedConverter.new nottradedlist, wantlist, settings.url, params[:name]
-
+        converter_time = Time.now
+        puts "Whole time: #{converter_time - start}[ms], Nottraded: #{nottradedlist_time - start}[ms], Wantlist: #{wantlist_time - start}[ms], Converter: #{converter_time - start}[ms]"
         haml :nottradedview
       end
 
@@ -86,6 +90,15 @@ module GeeklistWS
         @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
 
         haml :resultsview
+      end
+
+      get "/partial_list" do
+        puts "Method: GET, ID: #{params[:id]}"
+        start = Time.now
+        data = GeeklistWS::API::Internal.get_partial_geeklist(params[:id].to_s)
+        data_time = Time.now
+        puts "Whole time: #{data_time - start}[ms]"
+        data
       end
 
       error do
