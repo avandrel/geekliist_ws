@@ -121,7 +121,7 @@ module GeeklistWS
             @bgg_count = @bgg_count + 1
             readed_game = Readers.read_game(game)
             readed_game = @games_repository.add_game(readed_game)
-            readed_game.delete(:_id) if readed_game.has_key?(:_id)              
+            readed_game.delete(:_id) if !readed_game.nil? && readed_game.has_key?(:_id)              
         end
         readed_game
       end
