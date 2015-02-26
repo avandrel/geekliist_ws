@@ -21,6 +21,7 @@ module GeeklistWS
         puts "Geeklist loaded"
         games_finder = GeeklistWS::API::GamesFinder.new geeklist
         response = games_finder.find_games
+        return response if response.is_a?(OpenURI::HTTPError)
         response[:id] = id
         puts "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s"
         response
@@ -72,7 +73,8 @@ module GeeklistWS
         games_finder = GeeklistWS::API::GamesFinder.new geeklist
         
         resultlist = GeeklistWS::API::Readers.read_results id, url, false
-        resultlist[:games] = games_finder.find_some_games resultlist[:games]
+        games = games_finder.find_some_games resultlist[:games]
+        resultlist[:games] = games unless games.nil?
         resultlist
       end
 

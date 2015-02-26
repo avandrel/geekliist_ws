@@ -32,13 +32,11 @@ module GeeklistWS
 	  			sleep(0.1)
 	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{game[:id]}?stats=1"))
 	  		rescue => ex
-	  			puts "#{ex.message}"
-	  			puts "Retrying in 5 sec..."
-				sleep(5)
-	  			retry
+	  			return ex
 	  		end
 	  		ratings = doc.xpath("//boardgames/boardgame/statistics/ratings")
 	  		game.merge(Parsers.parse_rating(ratings))
+	  		game
 	  	end
 
 	  	def self.read_child(id)
@@ -47,9 +45,7 @@ module GeeklistWS
 	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{id}?stats=1"))
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			puts "Retrying in 5 sec..."
-				sleep(5)
-	  			retry
+	  			return ex
 	  		end
 	  		child ||= {}
 	  		child[:id] = id
@@ -64,9 +60,7 @@ module GeeklistWS
 	  			doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}")))
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			puts "Retrying in 50 sec..."
-				sleep(5)
-	  			retry
+	  			return ex
 	  		end
 	  		doc.at_xpath("//avatarlink").attribute('value').value
 	  	end
@@ -77,9 +71,7 @@ module GeeklistWS
 	  			doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi/collection/#{name}")))
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			puts "Retrying in 50 sec..."
-				sleep(5)
-	  			retry
+	  			return ex
 	  		end
 	  		if doc.xpath("//message").empty?
 	  			collection ||= {}

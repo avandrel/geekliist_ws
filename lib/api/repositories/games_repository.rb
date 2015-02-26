@@ -26,8 +26,9 @@ module GeeklistWS
             game[:created] = (DateTime.now + rand(3)).to_time.utc
             begin
     		  @games_collection.insert(game)
-            rescue
-              return nil
+            rescue => ex
+              puts ex.message
+              return game.clone
             end
             symbolize_keys(game)
             game.clone

@@ -22,9 +22,9 @@ module GeeklistWS
             posters = []
             i = 0
     		@geeklist[:games].each do |game|
-    			print_and_flush(".")
                 print_and_flush("|") if i % 100 == 0
                 readed_game = get_game(game)
+                return readed_game if readed_game.is_a?(OpenURI::HTTPError)
                 readed_game[:number] = game[:number]
                 readed_game[:poster] = game[:poster]
                 posters << game[:poster] unless posters.include?(game[:poster])
@@ -34,8 +34,8 @@ module GeeklistWS
                 if !game[:children].empty?
                     readed_game[:children] = []
                     game[:children].each do |child|
-                        print_and_flush(",")
                         readed_child = get_child(child[:id])
+                        return readed_child if readed_child.is_a?(OpenURI::HTTPError)
                         readed_child[:body] = child[:body]
                         readed_game[:children] << readed_child
                     end                    
@@ -103,6 +103,7 @@ module GeeklistWS
             unless @games_repository.game_in_repo?(game_id)
                 puts "Game (#{game})not in repo: #{game_id}"
                 readed_game = Readers.read_game({:id => game})
+                return readed_game if readed_game.is_a?(OpenURI::HTTPError)
                 readed_game = @games_repository.add_game(readed_game)
             end
             readed_game = @games_repository.get_game(game_id)
@@ -120,6 +121,7 @@ module GeeklistWS
             #puts "Reading from BGG #{game[:id]}"
             @bgg_count = @bgg_count + 1
             readed_game = Readers.read_game(game)
+            return readed_game if readed_game.is_a?(OpenURI::HTTPError)
             readed_game = @games_repository.add_game(readed_game)
             readed_game.delete(:_id) if !readed_game.nil? && readed_game.has_key?(:_id)              
         end
@@ -135,6 +137,7 @@ module GeeklistWS
             #puts "Reading from BGG #{game[:id]}"
             @bgg_count = @bgg_count + 1
             readed_game = Readers.read_child(id)
+            return readed_game if readed_game.is_a?(OpenURI::HTTPError)
             readed_game = @children_repository.add_child(readed_game)
             readed_game.delete(:_id) if readed_game.has_key?(:_id)              
         end
