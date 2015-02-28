@@ -6,18 +6,10 @@ module GeeklistWS
     	def initialize
     		connector = MongoConnector.new 
     		@children_collection = connector.children_collection
-            @all_collection = {}
-            connector.children_collection.find().each do |child|
-                child.delete("_id")
-                symbolize_keys(child)
-                @all_collection[child[:id]] = child
-            end
-            @all_collection
     	end
 
     	def child_in_repo?(id)
-    		#@games_collection.find_one({:id => "#{id}"}, {:fields => [:id]}) != nil
-            @all_collection.has_key?(id)
+            @children_collection.find({:id => "#{id}"}).count() == 1
     	end
 
     	def add_child(game)  		
@@ -30,21 +22,26 @@ module GeeklistWS
     	end
 
     	def get_child(id)
-    		#merged_game = @games_collection.find_one({:id => "#{game[:id]}"})
-            #merged_game.delete("_id")
-            #symbolize_keys(merged_game)
-            @all_collection[id].clone
+            child = @children_collection.find({:id => "#{id}"}).first()
+            child.delete("_id")
+            symbolize_keys(child)
+            child
     	end
 
-        def symbolize_keys(game)
-            game.keys.each do |key|
-                game[(key.to_sym rescue key) || key] = game.delete(key)
+        def get_childs(keys)
+            result = {}
+            @children_collection.find({:id => { "$in" => keys } }).each do |game|
+                game.delete("_id")
+                symbolize_keys(game)
+                result[game[:id]] = game
             end
+            result
         end
 
-        def print_and_flush(str)
-            print str
-            $stdout.flush
+        def symbolize_keys(child)
+            child.keys.each do |key|
+                child[(key.to_sym rescue key) || key] = child.delete(key)
+            end
         end
     end
   end

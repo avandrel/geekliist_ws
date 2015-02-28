@@ -18,11 +18,12 @@ module GeeklistWS
 	  			list_repository.add_list(id, list)
 	  		end
 	  		doc = Nokogiri::HTML(list, nil, "UTF-8")
-	  		geeklist = {:games => []}
+	  		geeklist = {:games => {}}
 	  		geeklist[:title] = doc.at_xpath("//title").content
 	  		geeklist[:id] = doc.at_xpath("//geeklist").attribute('id').value
 	  		doc.xpath("//item").each do |item|
-	  			geeklist[:games] << Parsers.parse_item(item, geeklist[:games].length + 1)
+	  			parsed_item = Parsers.parse_item(item, geeklist[:games].length + 1)
+	  			geeklist[:games][parsed_item[:itemid]] = parsed_item
 	  		end
 	  		geeklist
 	  	end
@@ -34,9 +35,8 @@ module GeeklistWS
 	  		rescue => ex
 	  			return ex
 	  		end
-	  		ratings = doc.xpath("//boardgames/boardgame/statistics/ratings")
-	  		game.merge(Parsers.parse_rating(ratings))
-	  		game
+	  		ratings = Parsers.parse_rating(doc.xpath("//boardgames/boardgame/statistics/ratings"))
+	  		game.merge(ratings)
 	  	end
 
 	  	def self.read_child(id)

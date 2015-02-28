@@ -19,9 +19,13 @@ module GeeklistWS
 
       get "/list" do
         puts "Method: GET, User: #{params[:bgguser]} Button: #{params[:button]}"
+        start = Time.now
         data = GeeklistWS::API::Internal.get_geeklist(params[:id].to_s)
+        data_time = Time.now
         halt(502, "Application error. Probably BGG timeout. Please try again later. Error message: #{data.message}") if data.is_a?(OpenURI::HTTPError)
         @converter = GeeklistWS::Frontend::ListConverter.new data, params[:button], params[:bgguser], settings.url
+        converter_time = Time.now
+        puts "Whole time: #{converter_time - start}[ms], Data: #{data_time - start}[ms], Converter: #{converter_time - start}[ms]"
 
         haml :listview
       end

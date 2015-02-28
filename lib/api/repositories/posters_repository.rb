@@ -3,25 +3,13 @@
 module GeeklistWS
   module API
     class PostersRepository
-    	def initialize(all)
-    		connector = MongoConnector.new 
-            if all
-                @posters_collection = connector.posters_collection
-                @all_collection = {}
-                connector.posters_collection.find().each do |poster|
-                    poster.delete("_id")
-                    symbolize_keys(poster)
-                    @all_collection[poster[:name]] = poster
-                end
-                @all_collection
-            else
-                @posters_collection = connector.bggusers_collection
-            end
+    	def initialize
+    		connector = MongoConnector.new
+            @posters_collection = connector.posters_collection    
     	end
 
     	def poster_in_repo?(name)
-    		#@games_collection.find_one({:id => "#{id}"}, {:fields => [:id]}) != nil
-            @all_collection.has_key?(name)
+    		@posters_collection.find({:name => "#{name}"}).count() == 1
     	end
 
     	def add_poster(poster, avatar)
@@ -32,11 +20,21 @@ module GeeklistWS
     	end
 
     	def get_poster(name)
-    		#merged_game = @games_collection.find_one({:id => "#{game[:id]}"})
-            #merged_game.delete("_id")
-            #symbolize_keys(merged_game)
-            @all_collection[name].clone
+            poster = @posters_collection.find({:name => "#{name}"}).first()
+            poster.delete("_id")
+            symbolize_keys(poster)
+            poster
     	end
+
+        def get_posters(names)
+            result = {}
+            @posters_collection.find({:name => { "$in" => names } }).each do |poster|
+                poster.delete("_id")
+                symbolize_keys(poster)
+                result[poster[:name]] = poster
+            end
+            result
+        end
 
         def symbolize_keys(poster)
             poster.keys.each do |key|

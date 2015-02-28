@@ -18,13 +18,12 @@ module GeeklistWS
         start_time = Time.now
         puts "Start reading geeklist"
         geeklist = GeeklistWS::API::Readers.read_geeklist(id)
-        puts "Geeklist loaded"
+        geeklist_time = Time.now
+        puts "Geeklist loaded, Elapsed: #{geeklist_time - start_time}[s]"
         games_finder = GeeklistWS::API::GamesFinder.new geeklist
-        response = games_finder.find_games
-        return response if response.is_a?(OpenURI::HTTPError)
-        response[:id] = id
-        puts "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s"
-        response
+        games_finder_time = Time.now
+        puts "Finder initialized, Elapsed: #{games_finder_time - geeklist_time}[s]"
+        games_finder.find_games
       end
 
       def self.get_partial_geeklist(id)
@@ -33,15 +32,7 @@ module GeeklistWS
         puts "Geeklist loaded: #{geeklist[:games].count}"
         games_finder = GeeklistWS::API::GamesFinder.new geeklist
 
-        counter = 0
-
-        geeklist[:games].each do |game|
-            games_finder.find_game(game)
-            counter = counter + 1
-            time = Time.now - start_time
-            break if time > 25
-        end
-        "\nName: #{geeklist[:title]}, Elapsed: #{Time.now - start_time}s, Counter: #{counter}/#{geeklist[:games].count}"
+        games_finder.refresh_games
       end
 
       def self.get_checklist(list, id)
