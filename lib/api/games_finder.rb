@@ -76,7 +76,7 @@ module GeeklistWS
         start_time = Time.now
         games_from_repo = get_games_from_repo(@geeklist[:games].keys)
         repo_time = Time.now
-
+        result = ""
         games_to_refresh = @geeklist[:games].keys - games_from_repo.keys
         counter = 0
         start_time = Time.now
@@ -87,10 +87,9 @@ module GeeklistWS
           break if time > 25
         end
 
-        return "\nGames refresh -> Name: #{@geeklist[:title]}, Elapsed: #{Time.now - start_time}[s], Counter: #{counter}/#{games_to_refresh.count}" if counter > 0
+        result = result + "\nGames refresh -> Name: #{@geeklist[:title]}, Elapsed: #{Time.now - start_time}[s], Counter: #{counter}/#{games_to_refresh.count}" if counter > 0
         childs_from_repo = get_childs_from_repo(@geeklist[:games].values)
         childs_to_refresh = get_child_ids(@geeklist[:games].values) - childs_from_repo.keys
-        start_time = Time.now
         childs_to_refresh.each do |id|
           refresh_child(id)
           counter = counter + 1
@@ -98,11 +97,10 @@ module GeeklistWS
           break if time > 25
         end
 
-        return "\nChildren refresh -> Name: #{@geeklist[:title]}, Elapsed: #{Time.now - start_time}[s], Counter: #{counter}/#{childs_to_refresh.count}" if counter > 0        
+        result = result +  "\nChildren refresh -> Name: #{@geeklist[:title]}, Elapsed: #{Time.now - start_time}[s], Counter: #{counter}/#{childs_to_refresh.count}" if counter > 0        
 
         posters_from_repo = get_posters_from_repo(@geeklist[:games].values)
         posters_to_refresh = @geeklist[:games].values.uniq{|game| game[:poster]}.map{|game| game[:poster]} - posters_from_repo.keys
-        start_time = Time.now
         posters_to_refresh.each do |name|
           refresh_poster(name)
           counter = counter + 1
@@ -110,7 +108,7 @@ module GeeklistWS
           break if time > 25
         end
 
-        return "\nPosters refresh -> Name: #{@geeklist[:title]}, Elapsed: #{Time.now - start_time}[s], Counter: #{counter}/#{posters_to_refresh.count}" if counter > 0      
+        result +  "\nPosters refresh -> Name: #{@geeklist[:title]}, Elapsed: #{Time.now - start_time}[s], Counter: #{counter}/#{posters_to_refresh.count}" if counter > 0      
       end
 
       def refresh_game(game)
