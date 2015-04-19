@@ -8,5 +8,6 @@
       - if @converter.category == key.to_s
         %button{:type => "submit", :class => "btn btn-info disabled", :style=> "font-size:11px;"}= "#{value[:sub_name]}"
       - else
+        - puts @converter.id.inspect
         %a{:href => "#{@converter.url}list?id=#{@converter.id}&button=#{key}"}
           %button{:type => "submit", :class => "btn btn-info", :style=> "font-size:11px;"}= value[:sub_name]
