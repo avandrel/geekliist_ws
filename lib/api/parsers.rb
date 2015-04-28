@@ -33,11 +33,34 @@ module GeeklistWS
     	def self.parse_rating(rating)
     		hash_rating = {}
     		hash_rating[:average] = rating.at_xpath("//average").content
+            hash_rating[:averageweight] = rating.at_xpath("//averageweight").content
     		rating.xpath("//ranks/rank").each do |rank|
     			hash_rating[rank.attribute('name').value.to_sym] = rank.attribute('value').value.to_i
     		end
     		hash_rating
     	end
+
+        def self.parse_boardgame(boardgame)
+            hash_boardgame = {}
+            hash_boardgame[:minplayers] = boardgame.at_xpath("//minplayers").content
+            maxplayers = boardgame.at_xpath("//maxplayers").content
+            hash_boardgame[:maxplayers] = maxplayers unless hash_boardgame[:minplayers] == maxplayers
+            hash_boardgame
+        end
+
+        def self.parse_poll_numplayers(polls)
+            hash_poll = {}
+            polls.children.each do |child|
+                if child.name = "suggested_numplayers"
+                    puts parse_results(child.at_xpath("//results"))
+                end
+            end
+            hash_poll
+        end
+
+        def self.parse_results(results)
+            results.children
+        end
 
         def self.parse_collection_item(item)
             collection_item = {}

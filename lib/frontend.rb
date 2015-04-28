@@ -20,7 +20,7 @@ module GeeklistWS
       get "/list" do
         puts "Method: GET, User: #{params[:bgguser]} Button: #{params[:button]}"
         start = Time.now
-        data = GeeklistWS::API::Internal.get_geeklist(params[:id].to_s)
+        data = GeeklistWS::API::Internal.get_geeklist(params[:id].to_s, settings.url)
         data_time = Time.now
         halt(502, "Application error. Probably BGG timeout. Please try again later. Error message: #{data.message}") if data.is_a?(OpenURI::HTTPError)
         data[:id] = params[:id].to_s
@@ -101,7 +101,7 @@ module GeeklistWS
       get "/partial_list" do
         puts "Method: GET, ID: #{params[:id]}"
         start = Time.now
-        data = GeeklistWS::API::Internal.get_partial_geeklist(params[:id].to_s)
+        data = GeeklistWS::API::Internal.get_partial_geeklist(params[:id].to_s, settings.url)
         data_time = Time.now
         puts "Whole time: #{data_time - start}[ms]"
         data

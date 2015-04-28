@@ -36,7 +36,11 @@ module GeeklistWS
 	  			return ex
 	  		end
 	  		ratings = Parsers.parse_rating(doc.xpath("//boardgames/boardgame/statistics/ratings"))
-	  		game.merge(ratings)
+	  		game.merge!(ratings)
+	  		boardgame = Parsers.parse_boardgame(doc.xpath("//boardgames/boardgame"))
+	  		game.merge!(boardgame)
+	  		#poll_numplayers = Parsers.parse_poll_numplayers(doc.xpath("//boardgames/boardgame/poll"))
+	  		#game.merge(boardgame)
 	  	end
 
 	  	def self.read_child(id)

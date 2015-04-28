@@ -26,6 +26,9 @@
                   - if !game[:collection].nil?
                     = haml :_collection, :locals => { :collection => game[:collection] }
               %div{:style => "clear:left;"}
+                - if !game[:players].nil?
+                  = "# of Players: #{game[:players]}"
+                  %br
                 - if game[:actual]
                   - game[:desc][:ranks].each do |r_key, r_value|
                     = "#{r_key}: #{r_value}"
@@ -52,4 +55,6 @@
           %td{:style => "vertical-align: middle", :class => "text-center"}
             %big= game[:average]
           %td{:style => "vertical-align: middle", :class => "text-center"}
-            %big= game[:boardgame]    
+            %big= game[:boardgame]
+          %td{:style => "vertical-align: middle", :class => "text-center"}
+            %big= game[:averageweight]  

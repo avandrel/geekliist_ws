@@ -41,7 +41,7 @@ module GeeklistWS
         end
 
     	def headers
-    		["Id","Title", "Poster", "Average Rating", "Overall Rank"]
+    		["Id","Title", "Poster", "Average Rating", "Overall Rank", "Average Weight"]
     	end
 
     	def games
@@ -54,11 +54,13 @@ module GeeklistWS
                     #:url => "http://www.boardgamegeek.com/boardgame/#{game[:id]}",
                     #:image => "http://cf.geekdo-images.com/images/pic#{game[:id]}_t.jpg",
     				:poster => { :name => game[:poster], :avatar => @posters[game[:poster]][:avatar] },
-    				:average => create_number(game[:average]),
-    				:boardgame => create_number(game[:boardgame]),
+    				:average => create_max_number(game[:average], true),
+    				:boardgame => create_max_number(game[:boardgame], true),
+                    :averageweight => create_max_number(game[:averageweight], false),
                     :desc => create_desc(game),
                     :collection => create_collection(game[:id]),
-                    :actual => check_actual(game[:body])
+                    :actual => check_actual(game[:body]),
+                    :players => prepare_players(game)
     			}
                 prepared_game[:desc][:alias] = prepare_alias(prepared_game)
                 prapared_games << prepared_game if check_category(prepared_game[:desc])
@@ -139,13 +141,23 @@ module GeeklistWS
             child
         end
 
-    	def create_number(number)
+    	def create_max_number(number, ismax)
     		if number.to_i > 0 
     			return number
-    		else
-    			return "---"
+    		else 
+                if ismax
+    			    return "99999"
+                else
+                    return "0"
+                end
     		end
     	end
+
+        def prepare_players(game)
+            players_string = game[:minplayers]
+            players_string = players_string + " - #{game[:maxplayers]}" unless game[:maxplayers].nil?
+            players_string
+        end
 
         def prepare_user(user)
             @posters_repository = GeeklistWS::API::PostersRepository.new false

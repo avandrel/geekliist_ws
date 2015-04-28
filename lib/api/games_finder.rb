@@ -3,7 +3,7 @@
 module GeeklistWS
   module API
     class GamesFinder
-      def initialize(geeklist)
+      def initialize(geeklist, url)
         @geeklist = geeklist
         start_time = Time.now
         @games_repository = GamesRepository.new
@@ -12,6 +12,7 @@ module GeeklistWS
         puts "Initialized, Elapsed: #{Time.now - start_time}[s]"
         @bgg_count = 0
         @database_count = 0
+        @url = url
       end
 
       def find_games
@@ -31,6 +32,13 @@ module GeeklistWS
         @geeklist[:games].each do |itemid, game|
           print_and_flush("|") if i % 100 == 0
           readed_game = games_from_repo[itemid]
+          while !validate(@geeklist[:games].count, games_from_repo.count)
+            refresh_games
+            games_from_repo = get_games_from_repo(@geeklist[:games].keys)
+            childs_from_repo = get_childs_from_repo(@geeklist[:games].values)
+            posters_from_repo = get_posters_from_repo(@geeklist[:games].values)
+            readed_game = games_from_repo[itemid]
+          end
           readed_game[:number] = game[:number]
           readed_game[:poster] = game[:poster]
           readed_game[:imageid] = game[:imageid]
@@ -73,6 +81,7 @@ module GeeklistWS
       end
 
       def refresh_games
+        puts "Begin refresh_games"
         start_time = Time.now
         games_from_repo = get_games_from_repo(@geeklist[:games].keys)
         repo_time = Time.now
@@ -152,6 +161,10 @@ module GeeklistWS
 
       def get_games_from_repo(keys)
         @games_repository.get_games(keys)
+      end
+
+      def validate(expected, actual)
+        expected == actual
       end
 
       def get_childs_from_repo(games)

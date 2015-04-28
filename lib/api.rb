@@ -14,23 +14,23 @@ module GeeklistWS
     end  
 
     class Internal
-      def self.get_geeklist(id)
+      def self.get_geeklist(id, url)
         start_time = Time.now
         puts "Start reading geeklist"
         geeklist = GeeklistWS::API::Readers.read_geeklist(id)
         geeklist_time = Time.now
         puts "Geeklist loaded, Elapsed: #{geeklist_time - start_time}[s]"
-        games_finder = GeeklistWS::API::GamesFinder.new geeklist
+        games_finder = GeeklistWS::API::GamesFinder.new geeklist, url
         games_finder_time = Time.now
         puts "Finder initialized, Elapsed: #{games_finder_time - geeklist_time}[s]"
         games_finder.find_games
       end
 
-      def self.get_partial_geeklist(id)
+      def self.get_partial_geeklist(id, url)
         start_time = Time.now
         geeklist = GeeklistWS::API::Readers.read_geeklist(id)
         puts "Geeklist loaded: #{geeklist[:games].count}"
-        games_finder = GeeklistWS::API::GamesFinder.new geeklist
+        games_finder = GeeklistWS::API::GamesFinder.new geeklist, url
 
         games_finder.refresh_games
       end
@@ -50,7 +50,7 @@ module GeeklistWS
         puts "Start reading geeklist"
         geeklist = GeeklistWS::API::Readers.read_geeklist(id)
         puts "Geeklist loaded"
-        games_finder = GeeklistWS::API::GamesFinder.new geeklist
+        games_finder = GeeklistWS::API::GamesFinder.new geeklist, url
         
         resultlist = GeeklistWS::API::Readers.read_results id, url, true
         resultlist[:games] = games_finder.find_some_games resultlist[:games]
@@ -61,7 +61,7 @@ module GeeklistWS
         puts "Start reading geeklist"
         geeklist = GeeklistWS::API::Readers.read_geeklist(id)
         puts "Geeklist loaded"
-        games_finder = GeeklistWS::API::GamesFinder.new geeklist
+        games_finder = GeeklistWS::API::GamesFinder.new geeklist, url
         
         resultlist = GeeklistWS::API::Readers.read_results id, url, false
         games = games_finder.find_some_games resultlist[:games]
