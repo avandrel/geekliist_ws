@@ -16,7 +16,7 @@ module GeeklistWS
             payload = { :name => poster, :avatar => avatar }
             #payload[:collection] = posters_collection unless posters_collection.nil?
             payload[:created] = DateTime.now.to_time.utc
-    		@posters_collection.insert(payload)
+    		@posters_collection.insert(payload) unless payload[:name].nil?
     	end
 
     	def get_poster(name)
