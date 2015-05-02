@@ -12,6 +12,7 @@ module GeeklistWS
     		game[:poster] = item.attribute('username').value
             game[:imageid] = item.attribute('imageid').value
             game[:itemid] = item.attribute('id').value
+            game[:thumbs] = item.attribute('thumbs').value
     		game[:number] = number
             game[:body] = item.children[0].text unless item.children[0].nil?
             game[:children] = []

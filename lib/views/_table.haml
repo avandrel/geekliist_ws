@@ -20,8 +20,14 @@
                   %h4
                     %a{:href => game[:desc][:url]}= game[:desc][:title]
                 %div{:style => "float:right;"}
-                  %h6
-                    %a{:href=> "#", :onclick => "setAttr('#{game[:desc][:alias]}'); return false"}= game[:desc][:alias]
+                  %div
+                    %h6
+                      %a{:href=> "#", :onclick => "setAttr('#{game[:desc][:alias]}'); return false"}= game[:desc][:alias]
+                  - if game[:thumbs] > 0
+                    %div
+                      %p{:style => "color: #008800; font-weight: bold;font-size: 1.25em;text-align: right;"}
+                        = "#{game[:thumbs]}"
+                        %img{:src => "#{@converter.url}img/thumb.gif"}
                 %div{:style => "float:right;"}
                   - if !game[:collection].nil?
                     = haml :_collection, :locals => { :collection => game[:collection] }

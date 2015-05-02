@@ -54,13 +54,14 @@ module GeeklistWS
                     #:url => "http://www.boardgamegeek.com/boardgame/#{game[:id]}",
                     #:image => "http://cf.geekdo-images.com/images/pic#{game[:id]}_t.jpg",
     				:poster => { :name => game[:poster], :avatar => @posters[game[:poster]][:avatar] },
-    				:average => create_max_number(game[:average], true),
-    				:boardgame => create_max_number(game[:boardgame], true),
-                    :averageweight => create_max_number(game[:averageweight], false),
+    				:average => create_max_float(game[:average], true),
+    				:boardgame => create_max_int(game[:boardgame], true),
+                    :averageweight => create_max_float(game[:averageweight], false),
                     :desc => create_desc(game),
                     :collection => create_collection(game[:id]),
                     :actual => check_actual(game[:body]),
-                    :players => prepare_players(game)
+                    :players => prepare_players(game),
+                    :thumbs => create_max_int(game[:thumbs], false)
     			}
                 prepared_game[:desc][:alias] = prepare_alias(prepared_game)
                 prapared_games << prepared_game if check_category(prepared_game[:desc])
@@ -141,17 +142,29 @@ module GeeklistWS
             child
         end
 
-    	def create_max_number(number, ismax)
-    		if number.to_i > 0 
-    			return number
+    	def create_max_float(number, ismax)
+    		if number.to_f > 0 
+    			return number.to_f
     		else 
                 if ismax
-    			    return "99999"
+    			    return 99999.to_f
                 else
-                    return "0"
+                    return 0.to_f
                 end
     		end
     	end
+
+        def create_max_int(number, ismax)
+            if number.to_i> 0 
+                return number.to_i
+            else 
+                if ismax
+                    return 99999
+                else
+                    return 0
+                end
+            end
+        end
 
         def prepare_players(game)
             players_string = game[:minplayers]
