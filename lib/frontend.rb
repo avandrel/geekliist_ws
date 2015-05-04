@@ -40,8 +40,7 @@ module GeeklistWS
       post "/checklist" do
           puts "checklist"
           @post = true
-          @url = settings.url
-          data = GeeklistWS::API::Internal.get_checklist(params["list"], settings.current_id)
+          data = GeeklistWS::API::Internal.get_checklist(params["list"], settings.current_id, settings.url)
           @converter = GeeklistWS::Frontend::CheckListConverter.new data, settings.url
           haml :checklistview
       end

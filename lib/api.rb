@@ -35,10 +35,10 @@ module GeeklistWS
         games_finder.refresh_games
       end
 
-      def self.get_checklist(list, id)
+      def self.get_checklist(list, id, url)
         start_time = Time.now
         puts "Api - id: #{id}"
-        geeklist = get_geeklist(id)
+        geeklist = get_geeklist(id, url)
         puts "Geeklist loaded"
         list_checker = GeeklistWS::API::ListChecker.new list.split(/\r\n/), geeklist
         response = list_checker.check
