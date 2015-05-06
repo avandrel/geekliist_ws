@@ -14,7 +14,7 @@
                   - slice.each do |ex|
                     %a{:href => "http://www.boardgamegeek.com/geeklist/#{@converter.id}/item/#{ex[:itemid]}#item#{ex[:itemid]}"}
                       %img{:src => "http://cf.geekdo-images.com/images/pic#{ex[:imageid]}_t.jpg", :style => "vertical-align:middle; width:90px; height:90px; margin:0 auto", :class => "thumbnail"}
-                      = ex[:title]
+                      = "#{ex[:title]} (#{ex[:number]})"
                     - ex[:aliases].each do |a|
                       = "<br>#{a}"
           %td{:style => "vertical-align: middle", :class => "text-center"}

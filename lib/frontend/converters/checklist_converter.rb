@@ -59,6 +59,7 @@ module GeeklistWS
                 flat_ex = { :poster => exchange[:poster] }
                 flat_ex[:from] = exchange[:from]
                 flat_ex[:to] = exchange[:to]
+                flat_ex[:number] = exchange[:number]
                 @flatten_exchanges << flat_ex
             end
         end
