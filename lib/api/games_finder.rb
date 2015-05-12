@@ -28,17 +28,16 @@ module GeeklistWS
         games_from_repo = get_games_from_repo(@geeklist[:games].keys)
         childs_from_repo = get_childs_from_repo(@geeklist[:games].values)
         posters_from_repo = get_posters_from_repo(@geeklist[:games].values)
-        repo_time = Time.now
-        @geeklist[:games].each do |itemid, game|
-          print_and_flush("|") if i % 100 == 0
-          readed_game = games_from_repo[itemid]
-          while !validate(@geeklist[:games].count, games_from_repo.count)
+        while !validate(@geeklist[:games].count, games_from_repo.count)
             refresh_games
             games_from_repo = get_games_from_repo(@geeklist[:games].keys)
             childs_from_repo = get_childs_from_repo(@geeklist[:games].values)
             posters_from_repo = get_posters_from_repo(@geeklist[:games].values)
-            readed_game = games_from_repo[itemid]
-          end
+        end
+        repo_time = Time.now
+        @geeklist[:games].each do |itemid, game|
+          print_and_flush("|") if i % 100 == 0
+          readed_game = games_from_repo[itemid]
           readed_game[:number] = game[:number]
           readed_game[:poster] = game[:poster]
           readed_game[:imageid] = game[:imageid]
@@ -68,6 +67,7 @@ module GeeklistWS
       end
 
       def find_some_games(games)
+        refresh_games
         games_dictionary = {}
         games.each do |game|
             games_dictionary[game] = @geeklist[:games].values.find{ |list_game| list_game[:number] == game.to_i }[:itemid]
