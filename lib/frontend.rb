@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'sinatra/json'
+require 'sinatra/jsonp'
 require 'sinatra/config_file'
 require 'haml'
 
@@ -9,6 +10,7 @@ module GeeklistWS
 	  class Web < Sinatra::Base
       register Sinatra::ConfigFile
       helpers Sinatra::JSON
+      helpers Sinatra::Jsonp
 
       root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
       config_file File.join( [root, 'config.yml'] )
@@ -78,7 +80,7 @@ module GeeklistWS
         puts "Get"
         @data = GeeklistWS::API::Internal.get_resultlist(settings.last_id, settings.results[settings.last_id])
 
-        json @data.to_json
+        jsonp(@data)
       end
 
       get "/json_lists*" do
@@ -86,7 +88,7 @@ module GeeklistWS
         @data = GeeklistWS::API::Internal.get_wantlist(settings.last_id, settings.lists[settings.last_id], nil)
 
 
-        json @data.to_json
+        jsonp(@data)
       end
 
       get "/results*" do

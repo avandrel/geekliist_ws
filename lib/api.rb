@@ -71,7 +71,7 @@ module GeeklistWS
 
       def self.get_wantlist(id, url, games)
         resultlist = GeeklistWS::API::Readers.read_wantlist id, url, games
-        resultlist
+        { :id => id, :wantlist => resultlist }
       end
 
       def self.get_stats(id)

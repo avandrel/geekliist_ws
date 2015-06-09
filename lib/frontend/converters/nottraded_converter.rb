@@ -6,7 +6,7 @@ module GeeklistWS
     	def initialize(results, wantlist, url, bgguser)
     		@id = results[:id]
             @games = results[:games]
-            @wants = convert_wants(wantlist, results[:nottraded])
+            @wants = convert_wants(wantlist[:wantlist], results[:nottraded])
 			@results = create_lefts(results[:nottraded], bgguser)
             @url = url
     	end
