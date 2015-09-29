@@ -1,5 +1,5 @@
-current_id: 196357
-last_id: 191665
+current_id: 0
+last_id: 196357
 timeout: 5
 names:
   178608: "Mathtrade 19"
@@ -17,6 +17,7 @@ results:
   187035: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2320%2C5%20-%20Wyniki%20koncowe.txt"
   190207: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2321%20-%20Wyniki%20koncowe.txt"
   191665: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2321,5%20-%20Wyniki%20koncowe.txt"
+  196357: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2322%20-%20Wyniki%20koncowe.txt"
 lists:
   #178608: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Listy.txt"
   #180671: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319,5%20-%20Listy.txt"
@@ -24,6 +25,7 @@ lists:
   187035: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2320%2C5%20-%20Listy.txt"
   190207: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2321%20-%20Listy.txt"
   191665: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2321,5%20-%20Listy.txt"
+  196357: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2322%20-%20Listy.txt"
 url:
   development: "http://localhost:9292/"
   test: "http://localhost:9292/"
