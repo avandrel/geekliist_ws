@@ -12,16 +12,16 @@ module GeeklistWS
     	end
 
         def list_in_repo?(id)
-            @list_collection.find_one({:id => "#{id}"}) != nil
+            @list_collection.find({:id => "#{id}"}).first() != nil
         end
 
         def add_list(id, list)          
             encoded = Base64.encode64 Zlib::Deflate.deflate(list)
-            @list_collection.insert({ :id => "#{id}", :list => "#{encoded}", :created => DateTime.now.to_time.utc })
+            @list_collection.insert_one({ :id => "#{id}", :list => "#{encoded}", :created => DateTime.now.to_time.utc })
         end
 
         def get_list(id)
-            list = @list_collection.find_one({:id => "#{id}"})
+            list = @list_collection.find({:id => "#{id}"}).first()
             list.delete("_id")
             symbolize_keys(list)
             Zlib::Inflate.inflate(Base64.decode64(list[:list]))

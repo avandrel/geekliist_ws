@@ -83,7 +83,7 @@ module GeeklistWS
     class MongoConnector
     	def connect
 #    		Mongo::Connection.new("ds063779.mongolab.com", "63779").db("heroku_app29514506")
-            Mongo::Connection.from_uri("mongodb://geeklist_client:geeklist@ds063779.mongolab.com:63779/heroku_app29514506").db('heroku_app29514506')
+            Mongo::Client.new("mongodb://geeklist_client:geeklist@ds063779.mongolab.com:63779/heroku_app29514506", :database => 'heroku_app29514506')
  #           Mongo::Connection.from_uri("mongodb://localhost").db('geeklistws')
     	end
     	

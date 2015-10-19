@@ -18,7 +18,7 @@ module GeeklistWS
             game[:created] = (DateTime.now + rand(3)).to_time.utc
             game[:geeklist_id] = geeklist_id
             begin
-    		  @games_collection.insert(game)
+    		  @games_collection.insert_one(game)
             rescue => ex
               puts ex.message
               return game.clone

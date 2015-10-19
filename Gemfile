@@ -10,7 +10,7 @@ gem 'emk-sinatra-url-for'
 gem 'bson_ext'
 
 gem 'nokogiri'
-gem 'mongo', '1.10.2'
+gem 'mongo'
 
 gem 'haml'
 gem 'bootstrap-sass'
