@@ -3,8 +3,8 @@
 module GeeklistWS
   module API
     class ResultsRepository
-    	def initialize
-    		connector = MongoConnector.new 
+    	def initialize(mongo_client)
+            connector = mongo_client
     		@results_collection = connector.results_collection
     	end
 

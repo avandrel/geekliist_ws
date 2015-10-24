@@ -6,8 +6,8 @@ require 'base64'
 module GeeklistWS
   module API
     class ListRepository
-    	def initialize
-    		connector = MongoConnector.new 
+    	def initialize(mongo_client)
+    		connector = mongo_client
     		@list_collection = connector.list_collection
     	end
 

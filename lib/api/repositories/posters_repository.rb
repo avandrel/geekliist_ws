@@ -3,8 +3,8 @@
 module GeeklistWS
   module API
     class PostersRepository
-    	def initialize
-    		connector = MongoConnector.new
+    	def initialize(mongo_client)
+            connector = mongo_client
             @posters_collection = connector.posters_collection    
     	end
 

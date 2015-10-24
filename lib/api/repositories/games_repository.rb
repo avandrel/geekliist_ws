@@ -3,8 +3,8 @@
 module GeeklistWS
   module API
     class GamesRepository
-    	def initialize
-    		connector = MongoConnector.new 
+    	def initialize(mongo_client)
+            connector = mongo_client
     		@games_collection = connector.games_collection
     	end
 

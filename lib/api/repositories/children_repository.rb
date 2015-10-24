@@ -3,8 +3,8 @@
 module GeeklistWS
   module API
     class ChildrenRepository
-    	def initialize
-    		connector = MongoConnector.new 
+    	def initialize(mongo_client)
+            connector = mongo_client
     		@children_collection = connector.children_collection
     	end
 

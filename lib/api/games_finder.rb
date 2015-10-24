@@ -3,12 +3,12 @@
 module GeeklistWS
   module API
     class GamesFinder
-      def initialize(geeklist, url)
+      def initialize(mongo_client, geeklist, url)
         @geeklist = geeklist
         start_time = Time.now
-        @games_repository = GamesRepository.new
-        @posters_repository = PostersRepository.new
-        @children_repository = ChildrenRepository.new
+        @games_repository = GamesRepository.new (mongo_client)
+        @posters_repository = PostersRepository.new (mongo_client)
+        @children_repository = ChildrenRepository.new (mongo_client)
         puts "Initialized, Elapsed: #{Time.now - start_time}[s]"
         @bgg_count = 0
         @database_count = 0

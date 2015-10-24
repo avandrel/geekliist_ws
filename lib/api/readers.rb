@@ -7,8 +7,8 @@ require 'open-uri'
 module GeeklistWS
   module API
 	class Readers
-	  	def self.read_geeklist(id)
-	  		list_repository = ListRepository.new
+	  	def self.read_geeklist(mongo_client, id)
+	  		list_repository = ListRepository.new (mongo_client)
 	  		if list_repository.list_in_repo?(id)
 	  			puts "List from cache"
 	  			list = list_repository.get_list(id)
@@ -88,7 +88,7 @@ module GeeklistWS
 	  	end
 	  		
 	  	def self.read_results(id, url, gettraded)
-	  		results_repository = ResultsRepository.new
+	  		results_repository = ResultsRepository.new (mongo_client)
 	  		if results_repository.result_in_repo?(id)
 	  			result = results_repository.get_result(id)
 	  			result
@@ -117,9 +117,9 @@ module GeeklistWS
 			end
 	  	end
 
-	  	def self.read_wantlist(id, url, games)
+	  	def self.read_wantlist(mongo_client, id, url, games)
 	  		puts "Reading wantlist"
-			wantlist_repository = WantlistRepository.new
+			wantlist_repository = WantlistRepository.new (mongo_client)
 	  		#if wantlist_repository.wantlist_in_repo?(id)
 	  			#result = wantlist_repository.get_wantlist(id)
 	  			#puts result.inspect
