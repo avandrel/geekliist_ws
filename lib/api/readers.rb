@@ -61,7 +61,8 @@ module GeeklistWS
 	  	def self.read_poster(name)
 	  		begin
 	  			sleep(0.1)
-	  			doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}")))
+	  			raw_data = open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}"))
+	  			doc = Nokogiri::HTML(raw_data) if raw_data.method_defined? :bson_type
 	  		rescue => ex
 	  			puts "#{ex.message}"
 	  			return ex
