@@ -33,9 +33,11 @@ module GeeklistWS
 
     	def self.parse_rating(rating)
     		hash_rating = {}
-    		hash_rating[:average] = rating.at_xpath("//average").content
-            numweights = rating.at_xpath("//numweights").content.to_i
-            hash_rating[:averageweight] = rating.at_xpath("//averageweight").content unless numweights <= 10
+    		hash_rating[:average] = rating.at_xpath("//average").content unless rating.at_xpath("//average").nil?
+            unless rating.at_xpath("//numweights").nil?
+                numweights = rating.at_xpath("//numweights").content.to_i 
+                hash_rating[:averageweight] = rating.at_xpath("//averageweight").content unless numweights <= 10
+            end
     		rating.xpath("//ranks/rank").each do |rank|
     			hash_rating[rank.attribute('name').value.to_sym] = rank.attribute('value').value.to_i
     		end
@@ -44,9 +46,11 @@ module GeeklistWS
 
         def self.parse_boardgame(boardgame)
             hash_boardgame = {}
-            hash_boardgame[:minplayers] = boardgame.at_xpath("//minplayers").content
-            maxplayers = boardgame.at_xpath("//maxplayers").content
-            hash_boardgame[:maxplayers] = maxplayers unless hash_boardgame[:minplayers] == maxplayers
+            hash_boardgame[:minplayers] = boardgame.at_xpath("//minplayers").content unless boardgame.at_xpath("//minplayers").nil?
+            unless boardgame.at_xpath("//maxplayers").nil?
+                maxplayers = boardgame.at_xpath("//maxplayers").content
+                hash_boardgame[:maxplayers] = maxplayers unless hash_boardgame[:minplayers] == maxplayers
+            end
             hash_boardgame
         end
 
