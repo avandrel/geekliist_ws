@@ -122,7 +122,6 @@ module GeeklistWS
             description[:full] = stripped_body
             game.each do |key,value|
                 if @subdomains.has_key?(key)
-                                    puts "#{key} -  #{value}"
                     description[:ranks][@subdomains[key][:rank_name]] = value unless value == 0
                 end
             end
