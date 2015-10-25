@@ -24,7 +24,7 @@ module GeeklistWS
         end
 
         def title
-            return "#{@subdomains[@category.to_sym][:sub_name]} :: #{@title}" unless @category.nil? || @category.empty?
+            return "#{@subdomains[@category][:sub_name]} :: #{@title}" unless @category.nil? || @category.empty?
             @title
         end
 
@@ -122,6 +122,7 @@ module GeeklistWS
             description[:full] = stripped_body
             game.each do |key,value|
                 if @subdomains.has_key?(key)
+                                    puts "#{key} -  #{value}"
                     description[:ranks][@subdomains[key][:rank_name]] = value unless value == 0
                 end
             end
