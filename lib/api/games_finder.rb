@@ -133,7 +133,7 @@ module GeeklistWS
           unless @posters_repository.poster_in_repo?(game[:poster])
             avatar = Readers.read_poster(game[:poster])
             avatar = "http://mathtrade.mgpm.pl/img/meeple.png" unless avatar != "N/A"
-            @posters_repository.add_poster(game[:poster], avatar)
+            @posters_repository.add_poster(game[:poster], avatar) unless game[:poster].nil?
           end
           puts "#{game[:itemid]} refreshing finished after #{Time.now - start_time}"
         end

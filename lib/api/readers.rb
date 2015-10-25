@@ -69,7 +69,7 @@ module GeeklistWS
 	  			end
 	  		rescue => ex
 	  			puts "#{ex.message}"
-	  			return ex
+	  			return "N/A"
 	  		end
 	  		doc.at_xpath("//avatarlink").attribute('value').value
 	  	end
