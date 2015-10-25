@@ -62,7 +62,11 @@ module GeeklistWS
 	  		begin
 	  			sleep(0.1)
 	  			raw_data = open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}"))
-	  			doc = Nokogiri::HTML(raw_data) if raw_data.method_defined? :bson_type
+	  			if raw_data.is_a?(StringIO)
+	  				doc = Nokogiri::HTML(raw_data)
+	  			else
+	  				"N/A"
+	  			end
 	  		rescue => ex
 	  			puts "#{ex.message}"
 	  			return ex
