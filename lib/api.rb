@@ -56,7 +56,7 @@ module GeeklistWS
         puts "Geeklist loaded"
         games_finder = GeeklistWS::API::GamesFinder.new mongo_client, geeklist, url
         
-        resultlist = GeeklistWS::API::Readers.read_results id, url, true
+        resultlist = GeeklistWS::API::Readers.read_results mongo_client, id, url, true
         resultlist[:games] = games_finder.find_some_games resultlist[:games]
         resultlist
       end
@@ -68,7 +68,7 @@ module GeeklistWS
         puts "Geeklist loaded"
         games_finder = GeeklistWS::API::GamesFinder.new mongo_client, geeklist, url
         
-        resultlist = GeeklistWS::API::Readers.read_results id, url, false
+        resultlist = GeeklistWS::API::Readers.read_results mongo_client, id, url, false
         games = games_finder.find_some_games resultlist[:games]
         resultlist[:games] = games unless games.nil?
         resultlist

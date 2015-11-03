@@ -92,7 +92,7 @@ module GeeklistWS
 	  		collection
 	  	end
 	  		
-	  	def self.read_results(id, url, gettraded)
+	  	def self.read_results(mongo_client, id, url, gettraded)
 	  		results_repository = ResultsRepository.new (mongo_client)
 	  		if results_repository.result_in_repo?(id)
 	  			result = results_repository.get_result(id)
@@ -174,9 +174,11 @@ module GeeklistWS
 					end
 				end
 				wants_to_delete = []
+				puts wants.count
+				puts @alias_collection.count
 				wants.select { |ex| ex[:to].include?("%") }.each do |ex|
 					ex[:to].scan(/(%[0-9a-zA-ZĄąĘęÓóĄąŚśŁłŻżŹźĆćŃńÉéÀàÄäÜü_-]*)/).each do |a|
-						if @alias_collection[ex[:poster]].has_key?(a[0])
+						if @alias_collection[ex[:poster]] != nil && @alias_collection[ex[:poster]].has_key?(a[0])
 							ex[:to][a[0]] = @alias_collection[ex[:poster]][a[0]]
 						else
 							wants_to_delete << ex
