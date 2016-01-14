@@ -9,18 +9,20 @@ module GeeklistWS
 	class Readers
 	  	def self.read_geeklist(mongo_client, id)
 	  		list_repository = ListRepository.new (mongo_client)
-	  		#if list_repository.list_in_repo?(id)
-	  			#puts "List from cache"
-	  			#list = list_repository.get_list(id)
-	  		#else
+	  		if list_repository.list_in_repo?(id)
+	  			puts "List from cache"
+	  			list = list_repository.get_list(id)
+	  		else
 	  			puts "List from BGG => http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1"
 	  			list = open("http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1").read
-	  		#	list_repository.add_list(id, list)
-	  		#end
+	  			if !list.include?("Your request for this geeklist has been accepted and will be processed")
+	  				list_repository.add_list(id, list)
+	  			end
+	  		end
 	  		doc = Nokogiri::HTML(list, nil, "UTF-8")
 	  		geeklist = {:games => {}}
-	  		geeklist[:title] = doc.at_xpath("//title").content
-	  		geeklist[:id] = doc.at_xpath("//geeklist").attribute('id').value
+	  		geeklist[:title] = doc.at_xpath("//title").content unless doc.at_xpath("//title").nil?
+	  		geeklist[:id] = doc.at_xpath("//geeklist").attribute('id').value unless doc.at_xpath("//geeklist").nil?
 	  		doc.xpath("//item").each do |item|
 	  			parsed_item = Parsers.parse_item(item, geeklist[:games].length + 1)
 	  			geeklist[:games][parsed_item[:itemid]] = parsed_item
