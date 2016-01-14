@@ -9,14 +9,14 @@ module GeeklistWS
 	class Readers
 	  	def self.read_geeklist(mongo_client, id)
 	  		list_repository = ListRepository.new (mongo_client)
-	  		if list_repository.list_in_repo?(id)
-	  			puts "List from cache"
-	  			list = list_repository.get_list(id)
-	  		else
+	  		#if list_repository.list_in_repo?(id)
+	  			#puts "List from cache"
+	  			#list = list_repository.get_list(id)
+	  		#else
 	  			puts "List from BGG => http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1"
 	  			list = open("http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1").read
-	  			list_repository.add_list(id, list)
-	  		end
+	  		#	list_repository.add_list(id, list)
+	  		#end
 	  		doc = Nokogiri::HTML(list, nil, "UTF-8")
 	  		geeklist = {:games => {}}
 	  		geeklist[:title] = doc.at_xpath("//title").content
