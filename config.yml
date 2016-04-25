@@ -1,4 +1,4 @@
-current_id: 0
+current_id: 208116
 last_id: 204938
 timeout: 5
 names:
@@ -12,6 +12,7 @@ names:
   198404: "Mathtrade 22.5"
   203362: "Mathtrade 23"
   204938: "Mathtrace 23.5"
+  208116: "Mathtrade 24"
   178867: "Mathtrade testlist"
 results:
   #178608: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Wyniki.txt"
