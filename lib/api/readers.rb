@@ -141,14 +141,14 @@ module GeeklistWS
 				aliases = []
 		  		file.readlines.each do |line|
 		  			is_added = false
-					element_array = line.scan(/^[(](.*)[)] ([0-9]*)\s?: (.*)/)
+					element_array = line.scan(/^\s?[(](.*)[)] ([0-9]*)\s?: (.*)/)
 		  			unless element_array.empty? 
 						exchange_hash = { :poster => element_array[0][0], :from => element_array[0][1], :to => element_array[0][2]} 
 						wants << exchange_hash
 						is_added = true
 					end
 
-					alias_array = line.scan(/^[(](.*)[)] (%.*)\s?: (.*)/)
+					alias_array = line.scan(/^\s?[(](.*)[)] (%.*)\s?: (.*)/)
 					unless alias_array.empty?
 						alias_hash = { :poster => alias_array[0][0].strip, :id => alias_array[0][1].strip, :elements => alias_array[0][2].strip} 
 						aliases << alias_hash
