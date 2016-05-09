@@ -7,7 +7,7 @@ require 'open-uri'
 module GeeklistWS
   module API
 	class Readers
-	  	def self.read_geeklist(mongo_client, id)
+	  	def self.read_geeklist(mongo_client, id, use_cache)
 	  		list_repository = ListRepository.new (mongo_client)
 	  		if list_repository.list_in_repo?(id)
 	  			puts "List from cache"
@@ -16,7 +16,7 @@ module GeeklistWS
 	  			puts "List from BGG => http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1"
 	  			list = open("http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1").read
 	  			if !list.include?("Your request for this geeklist has been accepted and will be processed")
-	  				list_repository.add_list(id, list)
+	  				list_repository.add_list(id, list, use_cache)
 	  			end
 	  		end
 	  		doc = Nokogiri::HTML(list, nil, "UTF-8")

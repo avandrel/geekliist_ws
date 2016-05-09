@@ -15,9 +15,13 @@ module GeeklistWS
             @list_collection.find({:id => "#{id}"}).first() != nil
         end
 
-        def add_list(id, list)          
+        def add_list(id, list, use_cache)          
             encoded = Base64.encode64 Zlib::Deflate.deflate(list)
-            @list_collection.insert_one({ :id => "#{id}", :list => "#{encoded}", :created => DateTime.now.to_time.utc })
+            insert = { :id => "#{id}", :list => "#{encoded}" }
+            if use_cache == 1
+                insert[:created] = DateTime.now.to_time.utc
+            end
+            @list_collection.insert_one(insert)
         end
 
         def get_list(id)

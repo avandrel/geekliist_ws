@@ -14,11 +14,11 @@ module GeeklistWS
     end  
 
     class Internal
-      def self.get_geeklist(id, url)
+      def self.get_geeklist(id, url, use_cache)
         mongo_client = create_client
         start_time = Time.now
         puts "Start reading geeklist"
-        geeklist = GeeklistWS::API::Readers.read_geeklist(mongo_client, id)
+        geeklist = GeeklistWS::API::Readers.read_geeklist(mongo_client, id, use_cache)
         geeklist_time = Time.now
         puts "Geeklist loaded, Elapsed: #{geeklist_time - start_time}[s]"
         games_finder = GeeklistWS::API::GamesFinder.new mongo_client, geeklist, url
