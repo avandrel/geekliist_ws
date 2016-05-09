@@ -102,7 +102,7 @@ module GeeklistWS
       get "/partial_list" do
         puts "Method: GET, ID: #{params[:id]}"
         start = Time.now
-        data = GeeklistWS::API::Internal.get_partial_geeklist(params[:id].to_s, settings.url)
+        data = GeeklistWS::API::Internal.get_partial_geeklist(params[:id].to_s, settings.url, settings.use_cache)
         data_time = Time.now
         puts "Whole time: #{data_time - start}[ms]"
         data

@@ -27,10 +27,10 @@ module GeeklistWS
         games_finder.find_games
       end
 
-      def self.get_partial_geeklist(id, url)
+      def self.get_partial_geeklist(id, url, use_cache)
         mongo_client = create_client
         start_time = Time.now
-        geeklist = GeeklistWS::API::Readers.read_geeklist(mongo_client, id)
+        geeklist = GeeklistWS::API::Readers.read_geeklist(mongo_client, id, use_cache)
         puts "Geeklist loaded: #{geeklist[:games].count}"
         games_finder = GeeklistWS::API::GamesFinder.new mongo_client, geeklist, url
 
