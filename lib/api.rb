@@ -37,11 +37,11 @@ module GeeklistWS
         games_finder.refresh_games
       end
 
-      def self.get_checklist(list, id, url)
+      def self.get_checklist(list, id, url, use_cache)
         mongo_client = create_client
         start_time = Time.now
         puts "Api - id: #{id}"
-        geeklist = get_geeklist(id, url)
+        geeklist = get_geeklist(id, url, use_cache)
         puts "Geeklist loaded"
         list_checker = GeeklistWS::API::ListChecker.new list.split(/\r\n/), geeklist
         response = list_checker.check
