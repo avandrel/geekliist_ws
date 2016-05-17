@@ -49,10 +49,10 @@ module GeeklistWS
         response
       end
 
-      def self.get_resultlist(id, url)
+      def self.get_resultlist(id, url, use_cache)
         mongo_client = create_client
         puts "Start reading geeklist"
-        geeklist = GeeklistWS::API::Readers.read_geeklist(mongo_client, id)
+        geeklist = GeeklistWS::API::Readers.read_geeklist(mongo_client, id, use_cache)
         puts "Geeklist loaded"
         games_finder = GeeklistWS::API::GamesFinder.new mongo_client, geeklist, url
         
@@ -61,10 +61,10 @@ module GeeklistWS
         resultlist
       end
 
-      def self.get_nottradedlist(id, url)
+      def self.get_nottradedlist(id, url, use_cache)
         mongo_client = create_client
         puts "Start reading geeklist"
-        geeklist = GeeklistWS::API::Readers.read_geeklist(mongo_client, id)
+        geeklist = GeeklistWS::API::Readers.read_geeklist(mongo_client, id, use_cache)
         puts "Geeklist loaded"
         games_finder = GeeklistWS::API::GamesFinder.new mongo_client, geeklist, url
         

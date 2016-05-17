@@ -49,7 +49,7 @@ module GeeklistWS
 
       get "/results" do
         puts "Method: GET, ID: #{params[:id]}"
-        data = GeeklistWS::API::Internal.get_resultlist(params[:id], settings.results[params[:id].to_i])
+        data = GeeklistWS::API::Internal.get_resultlist(params[:id], settings.results[params[:id].to_i], settings.use_cache)
         @converter = GeeklistWS::Frontend::ResultsConverter.new data, settings.url
 
         haml :resultsview
@@ -58,7 +58,7 @@ module GeeklistWS
       get "/nottraded" do
         puts "Method: GET, User: #{params[:bgguser]}, ID: #{params[:id]}"
         start = Time.now
-        nottradedlist = GeeklistWS::API::Internal.get_nottradedlist(params[:id], settings.results[params[:id].to_i])
+        nottradedlist = GeeklistWS::API::Internal.get_nottradedlist(params[:id], settings.results[params[:id].to_i], settings.use_cache)
         nottradedlist_time = Time.now
         wantlist = GeeklistWS::API::Internal.get_wantlist(params[:id], settings.lists[params[:id].to_i], nottradedlist[:games])
         wantlist_time = Time.now
@@ -78,7 +78,7 @@ module GeeklistWS
 
       get "/json_results*" do
         puts "Get"
-        @data = GeeklistWS::API::Internal.get_resultlist(settings.last_id, settings.results[settings.last_id])
+        @data = GeeklistWS::API::Internal.get_resultlist(settings.last_id, settings.results[settings.last_id], settings.use_cache)
 
         jsonp(@data)
       end
