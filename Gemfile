@@ -22,3 +22,5 @@ gem "newrelic-grape"
 gem "newrelic_moped"
 gem "newrelic_rpm"
 gem 'rspec'
+
+gem 'whacamole'

@@ -145,6 +145,7 @@ GEM
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
+    whacamole (1.2.0)
 
 PLATFORMS
   ruby
@@ -168,3 +169,4 @@ DEPENDENCIES
   sinatra-contrib
   sinatra-jsonp
   sinatra-static-assets
+  whacamole
