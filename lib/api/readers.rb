@@ -13,8 +13,8 @@ module GeeklistWS
 	  			puts "List from cache"
 	  			list = list_repository.get_list(id)
 	  		else
-	  			puts "List from BGG => http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1"
-	  			list = open("http://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1").read
+	  			puts "List from BGG => https://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1"
+	  			list = open("https://www.boardgamegeek.com/xmlapi/geeklist/#{id}?comments=1").read
 	  			if !list.include?("Your request for this geeklist has been accepted and will be processed")
 	  				list_repository.add_list(id, list, use_cache)
 	  			end
@@ -33,7 +33,7 @@ module GeeklistWS
 	  	def self.read_game(game)
 	  		begin
 	  			sleep(0.1)
-	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{game[:id]}?stats=1"))
+	  			doc = Nokogiri::HTML(open("https://www.boardgamegeek.com/xmlapi/boardgame/#{game[:id]}?stats=1"))
 	  		rescue => ex
 	  			return ex
 	  		end
@@ -48,7 +48,7 @@ module GeeklistWS
 	  	def self.read_child(id)
 	  		begin
 	  			sleep(0.1)
-	  			doc = Nokogiri::HTML(open("http://www.boardgamegeek.com/xmlapi/boardgame/#{id}?stats=1"))
+	  			doc = Nokogiri::HTML(open("https://www.boardgamegeek.com/xmlapi/boardgame/#{id}?stats=1"))
 	  		rescue => ex
 	  			puts "#{ex.message}"
 	  			return ex
@@ -63,7 +63,7 @@ module GeeklistWS
 	  	def self.read_poster(name)
 	  		begin
 	  			sleep(0.1)
-	  			raw_data = open(URI.encode("http://www.boardgamegeek.com/xmlapi2/user?name=#{name}"))
+	  			raw_data = open(URI.encode("https://www.boardgamegeek.com/xmlapi2/user?name=#{name}"))
 	  			if raw_data.is_a?(StringIO)
 	  				doc = Nokogiri::HTML(raw_data)
 	  			else
@@ -79,7 +79,7 @@ module GeeklistWS
 	  	def self.read_posters_collection(name)
 	  		begin
 	  			sleep(0.1)
-	  			doc = Nokogiri::HTML(open(URI.encode("http://www.boardgamegeek.com/xmlapi/collection/#{name}")))
+	  			doc = Nokogiri::HTML(open(URI.encode("https://www.boardgamegeek.com/xmlapi/collection/#{name}")))
 	  		rescue => ex
 	  			puts "#{ex.message}"
 	  			return ex
