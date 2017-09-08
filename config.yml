@@ -1,6 +1,6 @@
 use_cache: 1
-current_id: 0
-last_id: 214439
+current_id: 1
+last_id: 229384
 timeout: 5
 names:
   178608: "Mathtrade 19"
@@ -17,6 +17,7 @@ names:
   209101: "Mathtrade 24.5"
   213004: "Mathtrade 25"
   214439: "Mathtrade 25.5"
+  229384: "Mathtrade 28"
   178867: "Mathtrade testlist"
 results:
   #178608: "https://dl.dropboxusercontent.com/u/17622107/MatHandel%20%2319%20-%20Wyniki.txt"
